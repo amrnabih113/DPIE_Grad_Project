@@ -1,5 +1,7 @@
 ﻿
 
+using Bookify.Models;
+
 namespace Bookify.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class

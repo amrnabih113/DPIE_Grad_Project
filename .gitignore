@@ -126,6 +126,12 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 # Chutzpah Test files
 _Chutzpah*
 
