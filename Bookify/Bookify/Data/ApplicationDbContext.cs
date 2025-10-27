@@ -1,8 +1,4 @@
-﻿using Bookify.Data.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System;
-
+﻿
 namespace Bookify.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

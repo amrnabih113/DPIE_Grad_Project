@@ -3,6 +3,30 @@
   "WorkspaceRootPath": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\globalusing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\globalusing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\migrations\\applicationdbcontextmodelsnapshot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Migrations\\20251026162118_Initial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Bookify\\Migrations\\20251026162118_Initial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\models\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\models\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -15,24 +39,12 @@
       "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\models\\amenity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\globalusing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\globalusing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\repository\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\repository\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -41,14 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|solutionrelative:bookify\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{822CD4E9-ED3A-404F-8DBE-87919018917B}|Bookify\\Bookify.csproj|d:\\projects_codes\\dpie_grad_project\\bookify\\bookify\\models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -74,11 +78,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
+              "Title": "ApplicationDbContextModelSnapshot.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeDocumentMoniker": "Bookify\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "RelativeToolTip": "Bookify\\Migrations\\ApplicationDbContextModelSnapshot.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T17:29:10.071Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "20251026162118_Initial.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Migrations\\20251026162118_Initial.cs",
+              "RelativeDocumentMoniker": "Bookify\\Migrations\\20251026162118_Initial.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Migrations\\20251026162118_Initial.cs",
+              "RelativeToolTip": "Bookify\\Migrations\\20251026162118_Initial.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T16:21:19.276Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "RoomAmenity.cs",
               "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomAmenity.cs",
               "RelativeDocumentMoniker": "Bookify\\Models\\RoomAmenity.cs",
@@ -91,163 +121,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Program.cs",
-              "RelativeDocumentMoniker": "Bookify\\Program.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Program.cs",
-              "RelativeToolTip": "Bookify\\Program.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAgwAYAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T16:15:29.941Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\appsettings.json",
-              "RelativeDocumentMoniker": "Bookify\\appsettings.json",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\appsettings.json",
-              "RelativeToolTip": "Bookify\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-26T16:15:09.263Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 1,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Bookify\\Data\\ApplicationDbContext.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "Bookify\\Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAlAAAAAAAAAA==",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Data\\ApplicationDbContext.cs*",
+              "RelativeToolTip": "Bookify\\Data\\ApplicationDbContext.cs*",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAowAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-26T14:44:44.751Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "GenericRepository.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Repository\\GenericRepository.cs",
-              "RelativeDocumentMoniker": "Bookify\\Repository\\GenericRepository.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Repository\\GenericRepository.cs",
-              "RelativeToolTip": "Bookify\\Repository\\GenericRepository.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAgwBYAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T05:09:40.456Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ApplicationUser.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\ApplicationUser.cs",
-              "RelativeDocumentMoniker": "Bookify\\Models\\ApplicationUser.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\ApplicationUser.cs",
-              "RelativeToolTip": "Bookify\\Models\\ApplicationUser.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAWwBwAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T14:21:56.296Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Amenity.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Amenity.cs",
-              "RelativeDocumentMoniker": "Bookify\\Models\\Amenity.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Amenity.cs",
-              "RelativeToolTip": "Bookify\\Models\\Amenity.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T16:10:21.127Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Room.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Room.cs",
-              "RelativeDocumentMoniker": "Bookify\\Models\\Room.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Room.cs*",
-              "RelativeToolTip": "Bookify\\Models\\Room.cs*",
-              "ViewState": "AgIAABcAAAAAAAAAAAAQwC4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T14:33:14.102Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Booking.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Booking.cs",
-              "RelativeDocumentMoniker": "Bookify\\Models\\Booking.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Booking.cs",
-              "RelativeToolTip": "Bookify\\Models\\Booking.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAA2AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T14:37:27.589Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
               "Title": "GlobalUsing.cs",
               "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\GlobalUsing.cs",
               "RelativeDocumentMoniker": "Bookify\\GlobalUsing.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\GlobalUsing.cs",
-              "RelativeToolTip": "Bookify\\GlobalUsing.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\GlobalUsing.cs*",
+              "RelativeToolTip": "Bookify\\GlobalUsing.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-26T04:49:59.314Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Review.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Review.cs",
-              "RelativeDocumentMoniker": "Bookify\\Models\\Review.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Review.cs",
-              "RelativeToolTip": "Bookify\\Models\\Review.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAIwBwAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T14:37:53.951Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "RoomImage.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomImage.cs",
-              "RelativeDocumentMoniker": "Bookify\\Models\\RoomImage.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomImage.cs",
-              "RelativeToolTip": "Bookify\\Models\\RoomImage.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T14:39:57.228Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "RoomType.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomType.cs",
-              "RelativeDocumentMoniker": "Bookify\\Models\\RoomType.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomType.cs",
-              "RelativeToolTip": "Bookify\\Models\\RoomType.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAowBMAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T14:40:05.229Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 0,
               "Title": "ErrorViewModel.cs",
               "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\ErrorViewModel.cs",
               "RelativeDocumentMoniker": "Bookify\\Models\\ErrorViewModel.cs",
@@ -260,15 +160,132 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Payment.cs",
-              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Payment.cs",
-              "RelativeDocumentMoniker": "Bookify\\Models\\Payment.cs",
-              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Payment.cs",
-              "RelativeToolTip": "Bookify\\Models\\Payment.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAASAAAAAAAAAA==",
+              "DocumentIndex": 9,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Program.cs",
+              "RelativeDocumentMoniker": "Bookify\\Program.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Program.cs",
+              "RelativeToolTip": "Bookify\\Program.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAgwAYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T14:37:53.071Z",
+              "WhenOpened": "2025-10-26T16:15:29.941Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "GenericRepository.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Repository\\GenericRepository.cs",
+              "RelativeDocumentMoniker": "Bookify\\Repository\\GenericRepository.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Repository\\GenericRepository.cs",
+              "RelativeToolTip": "Bookify\\Repository\\GenericRepository.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAgwBYAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T05:09:40.456Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\appsettings.json",
+              "RelativeDocumentMoniker": "Bookify\\appsettings.json",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\appsettings.json",
+              "RelativeToolTip": "Bookify\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-26T16:15:09.263Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "Bookify\\Models\\ApplicationUser.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\ApplicationUser.cs",
+              "RelativeToolTip": "Bookify\\Models\\ApplicationUser.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAWwBwAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T14:21:56.296Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Amenity.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Amenity.cs",
+              "RelativeDocumentMoniker": "Bookify\\Models\\Amenity.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Amenity.cs",
+              "RelativeToolTip": "Bookify\\Models\\Amenity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T16:10:21.127Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Room.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Room.cs",
+              "RelativeDocumentMoniker": "Bookify\\Models\\Room.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Room.cs",
+              "RelativeToolTip": "Bookify\\Models\\Room.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAQwC4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T14:33:14.102Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Booking.cs",
+              "RelativeDocumentMoniker": "Bookify\\Models\\Booking.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Booking.cs",
+              "RelativeToolTip": "Bookify\\Models\\Booking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T14:37:27.589Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Review.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Review.cs",
+              "RelativeDocumentMoniker": "Bookify\\Models\\Review.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\Review.cs",
+              "RelativeToolTip": "Bookify\\Models\\Review.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAIwBwAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T14:37:53.951Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "RoomImage.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomImage.cs",
+              "RelativeDocumentMoniker": "Bookify\\Models\\RoomImage.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomImage.cs",
+              "RelativeToolTip": "Bookify\\Models\\RoomImage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T14:39:57.228Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "RoomType.cs",
+              "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomType.cs",
+              "RelativeDocumentMoniker": "Bookify\\Models\\RoomType.cs",
+              "ToolTip": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Models\\RoomType.cs",
+              "RelativeToolTip": "Bookify\\Models\\RoomType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAowBMAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-26T14:40:05.229Z",
               "EditorCaption": ""
             },
             {
@@ -277,7 +294,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "IGenericRepository.cs",
               "DocumentMoniker": "D:\\projects_codes\\DPIE_Grad_Project\\Bookify\\Bookify\\Repository\\IRepository\\IGenericRepository.cs",
               "RelativeDocumentMoniker": "Bookify\\Repository\\IRepository\\IGenericRepository.cs",
