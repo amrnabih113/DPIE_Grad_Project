@@ -89,14 +89,14 @@ namespace Bookify.Controllers
             if (signInResult.Succeeded) return LocalRedirect(returnUrl);
 
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var user = new ApplicationUser { UserName = email, Email = email };
+            var user = new ApplicationUser { UserName = email, Email = email, FullName = email.Split('@')[0] };
 
             var result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
             {
                 await _userManager.AddLoginAsync(user, info);
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return LocalRedirect(returnUrl);
+                return RedirectToAction("Index", "Home");
             }
 
             return RedirectToAction("Login");

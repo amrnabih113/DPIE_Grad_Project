@@ -6,6 +6,8 @@
 <h2>Login</h2>
 
 <form asp-action="Login" method="post">
+    @Html.ValidationSummary(excludePropertyErrors: true, "", new { @class = "text-danger" })
+
     <div class="form-group mb-3">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
@@ -26,10 +28,6 @@
     <button type="submit" class="btn btn-primary w-100">Login</button>
 </form>
 
-<div class="text-center mt-3">
-    <p>Or sign in using:</p>
-    <a asp-action="LoginWithGoogle" class="btn btn-danger w-100">Sign in with Google</a>
-</div>
 <div class="text-center mb-3">
     <p>Or</p>
 
