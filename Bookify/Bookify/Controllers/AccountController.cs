@@ -162,7 +162,7 @@ namespace Bookify.Controllers
                 return RedirectToAction("Login");
             }
 
-            return RedirectToAction("Login");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
