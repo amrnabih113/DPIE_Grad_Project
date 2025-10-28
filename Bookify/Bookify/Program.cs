@@ -1,13 +1,9 @@
-using Bookify.Models;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Bookify
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -47,8 +43,15 @@ namespace Bookify
                     googleOptions.CallbackPath = "/signin-google";
                 });
        
-
             var app = builder.Build();
+
+            //seeding roles
+            using(var scope = app.Services.CreateScope())
+            {
+                await IdentitySeeder.SeedRolesAsync(scope.ServiceProvider);
+                await IdentitySeeder.SeedAdminAccount(scope.ServiceProvider);
+            }
+            
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

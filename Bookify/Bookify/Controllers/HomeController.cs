@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Bookify.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookify.Controllers
@@ -12,7 +13,6 @@ namespace Bookify.Controllers
         {
             _logger = logger;
         }
-
         public IActionResult Index()
         {
             return View();

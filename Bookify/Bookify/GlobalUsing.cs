@@ -4,3 +4,7 @@ global using Bookify.Repository.IRepository;
 global using Bookify.Data.Models;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Bookify.Models.ViewModels;
+global using Microsoft.AspNetCore.Identity;
+global using Bookify.Models;
+global using Microsoft.AspNetCore.Authentication.Google;
+global using Microsoft.AspNetCore.Identity.UI.Services;

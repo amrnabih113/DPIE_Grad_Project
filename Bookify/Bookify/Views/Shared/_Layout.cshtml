@@ -26,6 +26,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if(User.Identity.IsAuthenticated){
+
+						    <li class="nav-item">
+							    <a class="nav-link text-dark">@User.Identity.Name</a>
+						    </li>
+                        }
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark">Your are user</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

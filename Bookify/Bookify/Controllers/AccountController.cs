@@ -11,17 +11,20 @@ namespace Bookify.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -55,6 +58,16 @@ namespace Bookify.Controllers
                         "Confirm your email",
                         $"Please confirm your account by <a href='{confirmationLink}'>clicking here</a>."
                     );
+                    //assign to user role
+                    
+                     var roleresult = await _userManager.AddToRoleAsync(user, "User");
+                    if(!roleresult.Succeeded)
+                    {
+                        foreach (var error in roleresult.Errors)
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        return View(model);
+                    }
+                    
 
                     TempData["Message"] = "Registration successful! Please check your email to confirm your account."; 
                     return RedirectToAction("Login");
