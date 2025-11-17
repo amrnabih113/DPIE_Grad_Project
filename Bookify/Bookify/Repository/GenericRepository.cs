@@ -1,6 +1,5 @@
 ﻿
-
-using Bookify.Models;
+using System.Linq.Expressions;
 
 namespace Bookify.Repository
 {
@@ -43,5 +42,30 @@ namespace Bookify.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbset;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, string includeProperties = "")
+        {
+            IQueryable<T> query = _dbset.Where(predicate);
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp.Trim());
+                }
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

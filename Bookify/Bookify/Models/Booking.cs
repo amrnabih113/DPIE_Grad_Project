@@ -23,6 +23,9 @@ namespace Bookify.Data.Models
             [Required, DataType(DataType.DateTime)]
             public DateTime CheckOut { get; set; }
 
+            [Required]
+            public int NumberOfGuests { get; set; }
+
             [Column(TypeName = "decimal(18,2)")]
             public decimal TotalPrice { get; set; }
 
