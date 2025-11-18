@@ -8,3 +8,6 @@ global using Microsoft.AspNetCore.Identity;
 global using Bookify.Models;
 global using Microsoft.AspNetCore.Authentication.Google;
 global using Microsoft.AspNetCore.Identity.UI.Services;
+global using Bookify.Repository;
+global using Bookify.services;
+global using Bookify.services.IServices;

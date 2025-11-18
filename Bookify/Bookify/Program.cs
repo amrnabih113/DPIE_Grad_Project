@@ -7,7 +7,6 @@ namespace Bookify
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -30,7 +29,11 @@ namespace Bookify
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-            // token lifetime
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IAmenityService, AmenityService>();
+
             builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
             options.TokenLifespan = TimeSpan.FromHours(3)); 
 
@@ -45,7 +48,6 @@ namespace Bookify
        
             var app = builder.Build();
 
-            //seeding roles
             using(var scope = app.Services.CreateScope())
             {
                 await IdentitySeeder.SeedRolesAsync(scope.ServiceProvider);
@@ -53,11 +55,9 @@ namespace Bookify
             }
             
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
