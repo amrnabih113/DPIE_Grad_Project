@@ -1,0 +1,103 @@
+﻿@model Bookify.Models.ViewModels.RoomIndexViewModel
+
+<div class="row fade-in">
+    @if (Model.Rooms != null && Model.Rooms.Any())
+    {
+        foreach (var room in Model.Rooms)
+        {
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="position-relative overflow-hidden">
+   <img src="@room.ImageUrl.Replace("\\", "/")" 
+     class="card-img-top" 
+     alt="@room.Name" 
+     style="height: 200px; object-fit: cover; width: 100%;">
+         
+    <script>
+        document.currentScript.previousElementSibling.onerror = function() {
+            this.src = '/images/default-room.jpg'; 
+        }
+    </script>
+
+    <button class="btn btn-light rounded-circle position-absolute top-0 end-0 m-2 favorite-btn shadow-sm" 
+            data-room-id="@room.Id" 
+            style="width: 35px; height: 35px; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-heart @(room.IsFavorite ? "text-danger" : "text-dark")"></i>
+    </button>
+
+    <div class="position-absolute bottom-0 start-0 bg-dark text-white px-2 py-1 opacity-75">
+        @if (room.DiscountPercentage.HasValue && room.DiscountPercentage > 0)
+        {
+            <span class="text-decoration-line-through small me-1">$@room.PricePerNight</span>
+            <span class="fw-bold">$@room.FinalPrice</span> <small>/night</small>
+        }
+        else
+        {
+            <span class="fw-bold">$@room.PricePerNight</span> <small>/night</small>
+        }
+    </div>
+</div>
+
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title text-truncate" title="@room.Name">@room.Name</h5>
+                            <div class="badge bg-success">
+                                <i class="fa-solid fa-star text-warning"></i> @room.Rating.ToString("0.0")
+                            </div>
+                        </div>
+                        
+                        <p class="card-text text-muted small flex-grow-1">
+                            @(room.Description.Length > 80 ? room.Description.Substring(0, 80) + "..." : room.Description)
+                        </p>
+
+                        <div class="d-flex justify-content-between text-muted small mb-3">
+                            <span><i class="fa-solid fa-user"></i> @room.NumberOfGusts Guests</span>
+                            <span><i class="fa-solid fa-ruler-combined"></i> @room.Area m²</span>
+                        </div>
+
+                        <a asp-controller="Room" asp-action="Details" asp-route-id="@room.Id" class="btn btn-outline-primary w-100 mt-auto">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <div class="text-muted">
+                <i class="fa-solid fa-box-open fa-3x mb-3"></i>
+                <h4>No rooms found matching your criteria.</h4>
+                <p>Try adjusting your filters or click Reset.</p>
+            </div>
+        </div>
+    }
+</div>
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" 
+                       href="@Url.Action("Index", new { 
+                           page = i, 
+                           minPrice = Model.MinPrice, 
+                           maxPrice = Model.MaxPrice, 
+                           maxGuests = Model.NumberOfGeusts, 
+                           order = Model.SelectedOrder,
+                           roomTypeIds = Model.SelectedRoomTypeIds, 
+                           amenityIds = Model.SelectedAmenityIds 
+                       })"
+                       data-ajax="true"
+                       data-ajax-method="get"
+                       data-ajax-update="#mainRoomContainer"
+                       data-ajax-mode="replace">
+                        @i
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

@@ -1,0 +1,148 @@
+﻿@model Bookify.Models.ViewModels.RoomDetailsViewModel
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-10">
+            @if (Model.RoomImages != null && Model.RoomImages.Any())
+            {
+                <div id="roomCarousel" class="carousel slide shadow rounded overflow-hidden" data-bs-ride="carousel">
+
+                    <div class="carousel-inner">
+                        @{
+                            int i = 0;
+                            foreach (var image in Model.RoomImages)
+                            {
+                                var activeClass = i == 0 ? "active" : "";
+                                <div class="carousel-item @activeClass">
+                                    <img src="@image.ImageUrl.Replace("\\", "/")"
+                                         class="d-block w-100"
+                                         alt="@Model.Name"
+                                         style="height: 500px; object-fit: cover;">
+                                </div>
+                                i++;
+                            }
+                        }
+                    </div>
+
+                    @if (Model.RoomImages.Count() > 1)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="shadow rounded overflow-hidden">
+                    <img src="/images/rooms/default-room.jpg" class="d-block w-100" style="height: 500px; object-fit: cover;" alt="Default Room Image">
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center mb-3">
+        <h2 class="me-3 mb-0">@Model.Name</h2>
+
+        <button class="btn btn-link favorite-btn p-0" data-room-id="@Model.Id" style="text-decoration: none;">
+            @if (Model.IsFavorite)
+            {
+                <i class="fa-solid fa-heart fa-2x text-danger"></i>
+            }
+            else
+            {
+                <i class="fa-solid fa-heart fa-2x text-dark"></i>
+            }
+        </button>
+    </div>
+
+    <p class="lead">@Model.Description</p>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Guests:</strong> @Model.NumberOfGusts</p>
+            <p><strong>Area:</strong> @Model.Area m²</p>
+
+            @if (Model.DiscountPercentage.HasValue && Model.DiscountPercentage > 0)
+            {
+                <p>
+                    <strong>Price per Night:</strong>
+                    <span class="text-decoration-line-through text-muted">@Model.PricePerNight</span>
+                    <span class="text-success fw-bold">@Model.FinalPrice</span>
+                </p>
+            }
+            else
+            {
+                <p><strong>Price per Night:</strong> @Model.PricePerNight</p>
+            }
+
+            <p>
+                <strong>Rating:</strong>
+                @if (Model.NumberOfReviews > 0)
+                {
+                    <span class="badge bg-warning text-dark">
+                        <i class="fa-solid fa-star"></i> @Model.Rating / 5
+                    </span>
+                    <span class="text-muted">(@Model.NumberOfReviews reviews)</span>
+                }
+                else
+                {
+                    <span class="text-muted">No reviews yet</span>
+                }
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <h5>Amenities:</h5>
+            @if (Model.Amenities != null && Model.Amenities.Any())
+            {
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (var a in Model.Amenities)
+                    {
+                        <span class="badge bg-light text-dark border">
+                            <i class="fa-solid fa-check text-success"></i> @a.Name
+                        </span>
+                    }
+                </div>
+            }
+            else
+            {
+                <span class="text-muted">None provided</span>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".favorite-btn").click(function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var icon = btn.find("i");
+                var roomId = btn.data("room-id");
+
+                btn.css("transform", "scale(1.2)");
+                setTimeout(() => btn.css("transform", "scale(1)"), 200);
+
+                $.post("/Favorite/Toggle", { roomId: roomId }, function (data) {
+                    if (icon.hasClass("text-danger")) {
+                        icon.removeClass("text-danger").addClass("text-dark");
+                    } else {
+                        icon.removeClass("text-dark").addClass("text-danger");
+                    }
+                }).fail(function() {
+                    alert("Please login first!");
+                });
+            });
+        });
+    </script>
+}

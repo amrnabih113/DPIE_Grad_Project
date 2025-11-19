@@ -1,0 +1,121 @@
+﻿@model Bookify.Models.ViewModels.RoomIndexViewModel
+@{
+    ViewData["Title"] = "Find Your Room";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 mb-5 bg-white rounded">
+                <h5 class="card-title mb-3">Filter Rooms</h5>
+
+                <form asp-action="Index" method="get"
+                      data-ajax="true"
+                      data-ajax-method="get"
+                      data-ajax-update="#mainRoomContainer"
+                      data-ajax-mode="replace">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Price Range</label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" name="minPrice" placeholder="Min" value="@Model.MinPrice">
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" name="maxPrice" placeholder="Max" value="@Model.MaxPrice">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Max Guests</label>
+                        <input type="number" class="form-control" name="maxGuests" value="@Model.NumberOfGeusts" min="1">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Room Type</label>
+                        <div class="d-flex flex-column gap-1">
+                            @foreach (var rt in Model.RoomTypes)
+                            {
+                                var isChecked = Model.SelectedRoomTypeIds.Contains(int.Parse(rt.Value));
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="roomTypeIds" value="@rt.Value" id="type_@rt.Value" @(isChecked ? "checked" : "")>
+                                    <label class="form-check-label" for="type_@rt.Value">@rt.Text</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Amenities</label>
+                        <div class="d-flex flex-column gap-1" style="max-height: 200px; overflow-y: auto;">
+                            @foreach (var a in Model.Amenities)
+                            {
+                                var isChecked = Model.SelectedAmenityIds.Contains(int.Parse(a.Value));
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="amenityIds" value="@a.Value" id="amenity_@a.Value" @(isChecked ? "checked" : "")>
+                                    <label class="form-check-label" for="amenity_@a.Value">@a.Text</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Sort By</label>
+                        <select name="order" class="form-select">
+                            <option value="price_asc" selected="@(Model.SelectedOrder == "price_asc")">Price: Low to High</option>
+                            <option value="price_desc" selected="@(Model.SelectedOrder == "price_desc")">Price: High to Low</option>
+                            <option value="rating_desc" selected="@(Model.SelectedOrder == "rating_desc")">Rating: High to Low</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+
+                        <a asp-action="Index"
+                           class="btn btn-outline-secondary"
+                           data-ajax="true"
+                           data-ajax-method="get"
+                           data-ajax-update="#mainRoomContainer"
+                           data-ajax-mode="replace">
+                            Reset Filters
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div id="loadingSpinner" style="display:none;" class="text-center my-3">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <div id="mainRoomContainer">
+                <partial name="_RoomListPartial" model="Model" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+        $(document).on('click', '.favorite-btn', function (e) {
+            e.preventDefault();
+            var btn = $(this);
+            var roomId = btn.data("room-id");
+
+            $.post("/Favorite/Toggle", { roomId: roomId }, function (data) {
+                     if (btn.find("i").hasClass("text-danger")) {
+                        btn.find("i").removeClass("text-danger").addClass("text-dark");
+                    } else {
+                        btn.find("i").removeClass("text-dark").addClass("text-danger");
+                    }
+                }
+            });
+        });
+    </script>
+}

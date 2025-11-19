@@ -1,0 +1,133 @@
+﻿
+@model EditRoomViewModel
+@{
+    ViewData["Title"] = "Edit Room";
+}
+
+<h2>Edit Room</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RoomTypeId" class="form-label">Room Type</label>
+        <select asp-for="RoomTypeId" class="form-select" asp-items="Model.RoomTypes"></select>
+        <span asp-validation-for="RoomTypeId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaxGuests" class="form-label"></label>
+        <input asp-for="MaxGuests" class="form-control" />
+        <span asp-validation-for="MaxGuests" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PriceForNight" class="form-label"></label>
+        <input asp-for="PriceForNight" class="form-control" />
+        <span asp-validation-for="PriceForNight" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Area" class="form-label"></label>
+        <input asp-for="Area" class="form-control" />
+        <span asp-validation-for="Area" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NoOfBeds" class="form-label"></label>
+        <input asp-for="NoOfBeds" class="form-control" />
+        <span asp-validation-for="NoOfBeds" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 form-check">
+        <input asp-for="IsAvailable" class="form-check-input" />
+        <label asp-for="IsAvailable" class="form-check-label"></label>
+    </div>
+
+    <div class="mb-3 form-check">
+        <input asp-for="HasDiscount" class="form-check-input" />
+        <label asp-for="HasDiscount" class="form-check-label"></label>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DiscountPercentage" class="form-label"></label>
+        <input asp-for="DiscountPercentage" class="form-control" />
+        <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RoomNumber" class="form-label"></label>
+        <input asp-for="RoomNumber" class="form-control" />
+        <span asp-validation-for="RoomNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Amenities</label>
+        <div class="form-check">
+            @foreach (var amenity in Model.Amenities)
+            {
+                <input type="checkbox"
+                       name="SelectedAmenityIds"
+                       value="@amenity.Value"
+                       class="form-check-input"
+                       @(Model.SelectedAmenityIds.Contains(int.Parse(amenity.Value)) ? "checked" : "") />
+
+                <label class="form-check-label">@amenity.Text</label>
+                <br />
+            }
+        </div>
+    </div>
+
+
+    <div class="mb-4">
+        <label class="form-label fw-bold">Current Images (Uncheck to Delete)</label>
+
+        @if (Model.ExistingRoomImages != null && Model.ExistingRoomImages.Any())
+        {
+            <div class="row">
+                @foreach (var img in Model.ExistingRoomImages)
+                {
+                    <div class="col-md-3 col-sm-4 mb-3 text-center">
+                        <div class="card p-2">
+                            <img src="@img.ImageUrl.Replace("\\", "/")" class="img-thumbnail mb-2" style="height: 150px; object-fit: cover;">
+
+                            <div class="form-check form-switch d-flex justify-content-center">
+                                <input class="form-check-input me-2" type="checkbox" name="KeepImageIds" value="@img.Id" checked id="img_@img.Id">
+                                <label class="form-check-label text-success fw-bold" for="img_@img.Id">Keep?</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No images available for this room.</p>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Add New Images</label>
+        <input asp-for="RoomImages" type="file" multiple class="form-control" accept="image/*" />
+        <span asp-validation-for="RoomImages" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

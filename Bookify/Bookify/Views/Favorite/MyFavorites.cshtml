@@ -1,0 +1,80 @@
+﻿@model List<Favorite>
+
+<div class="container mt-4">
+    <h2 class="mb-4">My Favorite Rooms <i class="fa-solid fa-heart text-danger"></i></h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var fav in Model)
+            {
+                var room = fav.Room;
+                
+                var imagePath = (room.RoomImages != null && room.RoomImages.Any())
+                                ? room.RoomImages.First().ImageUrl.Replace("\\", "/") 
+                                : "/images/rooms/default-room.jpg";
+
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        
+                        <img src="@imagePath" 
+                             class="card-img-top" 
+                             alt="@room.Name"
+                             style="height: 200px; object-fit: cover;"
+                             loading="lazy" />
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@room.Name</h5>
+                            
+                            <p class="card-text text-muted">
+                                @(room.Description.Length > 100 ? room.Description.Substring(0, 100) + "..." : room.Description)
+                            </p>
+                            
+                            <p class="fw-bold text-primary mt-auto">
+                                $@room.PriceForNight <small class="text-muted">/night</small>
+                            </p>
+
+                            <div class="d-flex justify-content-between mt-2">
+                                <a asp-controller="Room" asp-action="Details" asp-route-id="@room.Id" class="btn btn-outline-primary w-100 me-2">
+                                    View Details
+                                </a>
+                                
+                                <button class="btn btn-danger favorite-btn" data-room-id="@room.Id">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center py-5">
+            <h4>You haven't added any rooms to your favorites yet!</h4>
+            <a asp-controller="Room" asp-action="Index" class="btn btn-primary mt-3">Browse Rooms</a>
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".favorite-btn").click(function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var cardCol = btn.closest(".col-md-4"); 
+                var roomId = btn.data("room-id");
+
+                if(confirm("Are you sure you want to remove this room from favorites?")){
+                    $.post("/Favorite/Toggle", { roomId: roomId }, function (data) {
+                        if (!data.isFavorite) {
+                            cardCol.fadeOut(300, function(){ $(this).remove(); });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

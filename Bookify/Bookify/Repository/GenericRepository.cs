@@ -6,7 +6,7 @@ namespace Bookify.Repository
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly ApplicationDbContext _context;
-        private readonly DbSet<T> _dbset;
+        protected readonly DbSet<T> _dbset;
 
         public GenericRepository(ApplicationDbContext context)
         {

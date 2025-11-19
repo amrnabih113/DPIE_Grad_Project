@@ -1,0 +1,113 @@
+﻿@model Bookify.Models.ViewModels.AddRoomViewModel
+@{
+    ViewData["Title"] = "Add Room";
+}
+
+<h2>Add Room</h2>
+
+<form asp-action="Add" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RoomTypeId" class="form-label"></label>
+        <select asp-for="RoomTypeId" class="form-control" asp-items="Model.RoomTypes">
+            <option value="">-- Select Room Type --</option>
+        </select>
+        <span asp-validation-for="RoomTypeId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaxGuests" class="form-label"></label>
+        <input asp-for="MaxGuests" class="form-control" />
+        <span asp-validation-for="MaxGuests" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PriceForNight" class="form-label"></label>
+        <input asp-for="PriceForNight" class="form-control" />
+        <span asp-validation-for="PriceForNight" class="text-danger"></span>
+    </div>
+    <div class="mb-3 form-check">
+        <input asp-for="HasDiscount" class="form-check-input" id="hasDiscountCheckbox" />
+        <label asp-for="HasDiscount" class="form-check-label"></label>
+    </div>
+
+    <div class="mb-3" id="discountInputDiv" style="display:none;">
+        <label asp-for="DiscountPercentage" class="form-label"></label>
+        <input asp-for="DiscountPercentage" class="form-control" />
+        <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Area" class="form-label"></label>
+        <input asp-for="Area" class="form-control" />
+        <span asp-validation-for="Area" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NoOfBeds" class="form-label"></label>
+        <input asp-for="NoOfBeds" class="form-control" />
+        <span asp-validation-for="NoOfBeds" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Amenities</label>
+        <div class="form-check">
+            @foreach(var amenity in Model.Amenities)
+            {
+                var isChecked = Model.SelectedAmenityIds.Contains(int.Parse(amenity.Value));
+                <div>
+                    <input type="checkbox" name="SelectedAmenityIds" value="@amenity.Value" @(isChecked ? "checked" : "") class="form-check-input" />
+                    <label class="form-check-label">@amenity.Text</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IsAvailable" class="form-label"></label>
+        <input asp-for="IsAvailable" type="checkbox" class="form-check-input" />
+    </div>
+
+    <div class="mb-3">
+        <label>Room Images</label>
+        <input asp-for="RoomImages" type="file" multiple class="form-control" />
+        <span asp-validation-for="RoomImages" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="RoomNumber" class="form-label"></label>
+        <input asp-for="RoomNumber" class="form-control" />
+        <span asp-validation-for="RoomNumber" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Room</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const checkbox = document.getElementById('hasDiscountCheckbox');
+        const discountDiv = document.getElementById('discountInputDiv');
+
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                discountDiv.style.display = 'block';
+            } else {
+                discountDiv.style.display = 'none';
+            }
+        });
+        if (check.checked) discountDiv.style.display = 'block';
+
+    </script>
+}
+

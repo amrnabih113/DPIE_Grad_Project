@@ -17,6 +17,8 @@ namespace Bookify.Models
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
