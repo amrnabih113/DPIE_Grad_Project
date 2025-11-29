@@ -4,46 +4,157 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Bookify</title>
-    <script type="importmap"></script>
+    @* <script type="importmap"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Bookify.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Bookify.styles.css" asp-append-version="true" /> *@
+	<link href="~/css/styles.css" rel="stylesheet" />
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Bookify</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        @if(User.Identity.IsAuthenticated){
 
-						    <li class="nav-item">
-							    <a class="nav-link text-dark">@User.Identity.Name</a>
-						    </li>
-                        }
-                        @if (User.IsInRole("User"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark">Your are user</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
+    @using Microsoft.AspNetCore.Identity
+    @inject SignInManager<ApplicationUser> SignInManager
+    @inject UserManager<ApplicationUser> UserManager
+
+    @{
+        string currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+        string currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+
+        string GetActiveClass(string controller, string action)
+        {
+            return (currentController == controller && currentAction == action) ? "active" : "";
+        }
+
+        var user = await UserManager.GetUserAsync(User);
+    }
+
+    <header class="header">
+        <div class="container header-content">
+            <a asp-controller="Home" asp-action="Index" class="logo">
+                <div class="logo-icon">B</div>
+                <span>Bookify</span>
+            </a>
+
+            <nav class="nav">
+                <a asp-controller="Home" asp-action="Index" class="@GetActiveClass("Home", "Index")">Home</a>
+                <a asp-controller="Rooms" asp-action="Index" class="@GetActiveClass("Rooms", "Index")">Rooms</a>
+                <a asp-controller="Home" asp-action="About" class="@GetActiveClass("Home", "About")">About</a>
+                <a asp-controller="Home" asp-action="Contact" class="@GetActiveClass("Home", "Contact")">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                @if (SignInManager.IsSignedIn(User) && user != null)
+                {
+                    <div class="user-menu">
+                        <div class="user-avatar" onclick="toggleUserDropdown()">
+                            @{
+                                // منطق بسيط لاستخراج الأحرف الأولى (ممكن تحسينه بناء على تخزينك للاسم)
+                                var email = user.Email ?? "U";
+                                var initial = email.Substring(0, 1).ToUpper();
+                            }
+                            @initial
+                        </div>
+
+                        <div class="user-dropdown" id="userDropdown">
+                            <div style="padding: var(--spacing-md); border-bottom: 1px solid var(--color-gray-200);">
+                                <div style="font-weight: var(--font-weight-semibold);">@user.UserName</div>
+                                <div style="font-size: var(--font-size-sm); color: var(--color-gray-500);">@user.Email</div>
+                            </div>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Admin" asp-action="Index" class="user-dropdown-item">
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    Admin Dashboard
+                                </a>
+                                <div class="user-dropdown-separator"></div>
+                            }
+
+                            <a asp-controller="Booking" asp-action="MyBookings" class="user-dropdown-item">
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                </svg>
+                                My Bookings
+                            </a>
+
+                            <a asp-controller="Account" asp-action="Settings" class="user-dropdown-item">
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                                </svg>
+                                Settings
+                            </a>
+
+                            <div class="user-dropdown-separator"></div>
+
+                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="user-dropdown-item" style="cursor: pointer;" onclick="this.submit()">
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+                                </svg>
+                                Logout
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        Login
+                    </a>
+                }
+
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </button>
             </div>
-        </nav>
+        </div>
     </header>
+
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <h2>Menu</h2>
+        <nav class="mobile-nav">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <a asp-controller="Rooms" asp-action="Index">Rooms</a>
+            <a asp-controller="Home" asp-action="About">About</a>
+            <a asp-controller="Home" asp-action="Contact">Contact</a>
+
+            @if (SignInManager.IsSignedIn(User) && user != null)
+            {
+                <div style="border-top: 1px solid var(--color-gray-200); margin-top: var(--spacing-lg); padding-top: var(--spacing-lg);">
+                    <div style="margin-bottom: var(--spacing-md); padding-bottom: var(--spacing-md); border-bottom: 1px solid var(--color-gray-200);">
+                        <div style="font-weight: var(--font-weight-semibold); color: var(--color-primary);">@user.UserName</div>
+                        <div style="font-size: var(--font-size-sm); color: var(--color-gray-500);">@user.Email</div>
+                    </div>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Admin" asp-action="Index">Admin Dashboard</a>
+                    }
+
+                    <a asp-controller="Booking" asp-action="MyBookings">My Bookings</a>
+                    <a asp-controller="Account" asp-action="Settings">Settings</a>
+
+                    <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                        <button type="submit" style="background:none; border:none; padding:0; color: inherit; font: inherit; cursor: pointer; width: 100%; text-align: left;">Logout</button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login">Login</a>
+            }
+        </nav>
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @if (TempData["Message"] != null)
@@ -59,18 +170,67 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+
+    <footer class="footer">
         <div class="container">
-            &copy; 2025 - Bookify - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Bookify</h3>
+                    <p style="color: rgba(255, 255, 255, 0.8); margin-top: var(--spacing-md);">
+                        Experience luxury and comfort in our premium hotel rooms. Your perfect stay awaits.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <div class="footer-links">
+                        <a asp-controller="Home" asp-action="Index">Home</a>
+                        <a asp-controller="Rooms" asp-action="Index">Rooms</a>
+                        <a asp-controller="Home" asp-action="About">About</a>
+                        <a asp-controller="Home" asp-action="Contact">Contact</a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Account</h3>
+                    <div class="footer-links">
+
+                        @if (!SignInManager.IsSignedIn(User))
+                        {
+                            <a asp-controller="Account" asp-action="Login">Login</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Booking" asp-action="MyBookings">My Bookings</a>
+                            <a asp-controller="Account" asp-action="Settings">Settings</a>
+                        }
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="footer-links">
+                        <p style="color: rgba(255, 255, 255, 0.8);">123 Luxury Ave, Paradise City</p>
+                        <p style="color: rgba(255, 255, 255, 0.8);">Phone: +1 (555) 123-4567</p>
+                        <p style="color: rgba(255, 255, 255, 0.8);">Email: info@bookify.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; @DateTime.Now.Year Bookify. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-    }
+
+
+	<script src="~/js/utils.js"></script>
+	<script src="~/js/components.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

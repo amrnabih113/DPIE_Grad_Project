@@ -120,7 +120,7 @@ namespace Bookify.Controllers
             return View("Login", model);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
