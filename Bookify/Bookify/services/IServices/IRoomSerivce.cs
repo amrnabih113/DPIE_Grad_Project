@@ -9,6 +9,7 @@
         Task AddRoomAsync(AddRoomViewModel model);
         Task<EditRoomViewModel> GetRoomForEditAsync(int id);
         public Task UpdateRoomAsync(EditRoomViewModel model);
+        Task<IEnumerable<Room>> GetAllForAdminAsync();
 
 
     }

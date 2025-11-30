@@ -110,7 +110,7 @@ namespace Bookify.services
             room.DiscountPercent = model.HasDiscount ? model.DiscountPercentage : null;
             room.RoomNumber = model.RoomNumber;
 
-            room.RoomAmenities.Clear(); 
+            room.RoomAmenities.Clear();
             if (model.SelectedAmenityIds != null && model.SelectedAmenityIds.Any())
             {
                 foreach (var id in model.SelectedAmenityIds)
@@ -233,7 +233,13 @@ namespace Bookify.services
                 Amenities = allAmenities.Select(a => new SelectListItem { Text = a.Name, Value = a.Id.ToString() }).ToList()
             };
         }
-      // Some helper Methods
+
+
+        public async Task<IEnumerable<Room>> GetAllForAdminAsync()
+        {
+            return await _roomRepository.GetAllIncludingAsync(r => r.RoomType, r => r.RoomImages);
+        }
+        // Some helper Methods
         private decimal CalculateFinalPrice(decimal price, bool hasDiscount, int? discountPercent)
         {
             if (!hasDiscount || discountPercent == null) return price;
@@ -300,7 +306,7 @@ namespace Bookify.services
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        await file.CopyToAsync(stream); 
+                        await file.CopyToAsync(stream);
                     }
 
                     roomImages.Add(new RoomImage { ImageUrl = "/images/rooms/" + fileName });

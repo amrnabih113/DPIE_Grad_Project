@@ -2,7 +2,303 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section
+    style="position: relative; height: 600px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+    <div style="position: absolute; inset: 0;">
+        <img src="https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBob3RlbCUyMGxvYmJ5fGVufDF8fHx8MTc2MjAxMTI3OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+            alt="Luxury Hotel Lobby" style="width: 100%; height: 100%; object-fit: cover;" />
+        <div
+            style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.4));">
+        </div>
+    </div>
+
+    <div class="container" style="position: relative; z-index: 10; text-align: center; color: white;">
+        <div class="fade-in">
+            <div class="badge badge-primary mb-3">Welcome to Bookify</div>
+            <h1 style="font-size: var(--font-size-5xl); margin-bottom: var(--spacing-lg); color: white;" class="mb-4">
+                Experience Luxury
+                <br>
+                <span style="color: var(--color-accent);">Beyond Imagination</span>
+            </h1>
+            <p
+                style="font-size: var(--font-size-xl); color: rgba(255,255,255,0.9); max-width: 800px; margin: 0 auto var(--spacing-2xl);">
+                Discover unparalleled comfort and world-class hospitality in our premium rooms and suites
+            </p>
+            <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                <a asp-controller="Room" asp-action="Index" class="btn btn-primary btn-lg">Explore Rooms</a>
+                <a asp-controller="Home" asp-action="About" class="btn btn-outline btn-lg"
+                    style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-color: white; color: white;">
+                    Learn
+                    More
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-12" style="background: white;">
+    <div class="container">
+        <div class="text-center mb-6">
+            <h2 class="text-primary mb-3">World-Class Amenities</h2>
+            <p class="text-gray" style="max-width: 800px; margin: 0 auto;">
+                Every detail carefully curated to ensure your stay is nothing short of extraordinary
+            </p>
+        </div>
+
+        <div class="grid grid-3">
+            <div class="card fade-in">
+                <div class="card-content text-center">
+                    <div
+                        style="width: 4rem; height: 4rem; border-radius: var(--radius-full); background: var(--color-gray-50); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                        <svg width="32" height="32" viewBox="0 0 20 20" fill="var(--color-accent)">
+                            <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z">
+                            </path>
+                            <path
+                                d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-primary mb-2">Free High-Speed WiFi</h3>
+                    <p class="text-gray">Stay connected with complimentary WiFi throughout the property</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <div class="card-content text-center">
+                    <div
+                        style="width: 4rem; height: 4rem; border-radius: var(--radius-full); background: var(--color-gray-50); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                        <svg width="32" height="32" viewBox="0 0 20 20" fill="var(--color-accent)">
+                            <path fill-rule="evenodd"
+                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-primary mb-2">24/7 Room Service</h3>
+                    <p class="text-gray">Enjoy round-the-clock dining and beverage service in your room</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <div class="card-content text-center">
+                    <div
+                        style="width: 4rem; height: 4rem; border-radius: var(--radius-full); background: var(--color-gray-50); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                        <svg width="32" height="32" viewBox="0 0 20 20" fill="var(--color-accent)">
+                            <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z">
+                            </path>
+                            <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z">
+                            </path>
+                            <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-primary mb-2">Fine Dining</h3>
+                    <p class="text-gray">Experience world-class cuisine at our award-winning restaurants</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <div class="card-content text-center">
+                    <div
+                        style="width: 4rem; height: 4rem; border-radius: var(--radius-full); background: var(--color-gray-50); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                        <svg width="32" height="32" viewBox="0 0 20 20" fill="var(--color-accent)">
+                            <path fill-rule="evenodd"
+                                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-primary mb-2">Fitness Center</h3>
+                    <p class="text-gray">State-of-the-art gym facilities with personal trainers available</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <div class="card-content text-center">
+                    <div
+                        style="width: 4rem; height: 4rem; border-radius: var(--radius-full); background: var(--color-gray-50); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                        <svg width="32" height="32" viewBox="0 0 20 20" fill="var(--color-accent)">
+                            <path fill-rule="evenodd"
+                                d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-primary mb-2">Infinity Pool</h3>
+                    <p class="text-gray">Relax in our stunning rooftop infinity pool with ocean views</p>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <div class="card-content text-center">
+                    <div
+                        style="width: 4rem; height: 4rem; border-radius: var(--radius-full); background: var(--color-gray-50); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                        <svg width="32" height="32" viewBox="0 0 20 20" fill="var(--color-accent)">
+                            <path fill-rule="evenodd"
+                                d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-primary mb-2">Premium Security</h3>
+                    <p class="text-gray">24/7 security and concierge services for your peace of mind</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-12" style="background: var(--color-gray-50);">
+    <div class="container">
+        <div class="text-center mb-6">
+            <h2 class="text-primary mb-3">Popular Rooms</h2>
+            <p class="text-gray" style="max-width: 800px; margin: 0 auto;">
+                Explore our most sought-after accommodations
+            </p>
+        </div>
+
+        <div class="grid grid-3 mb-4" id="popularRooms">
+            <div class="text-center" style="grid-column: 1 / -1;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a asp-controller="Room" asp-action="Index" class="btn btn-outline btn-lg">View All Rooms</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-12" style="background: white;">
+    <div class="container">
+        <div class="text-center mb-6">
+            <h2 class="text-primary mb-3">What Our Guests Say</h2>
+            <p class="text-gray" style="max-width: 800px; margin: 0 auto;">
+                Real experiences from our valued guests
+            </p>
+        </div>
+
+        <div class="grid grid-3" id="recentReviews">
+            <div class="text-center" style="grid-column: 1 / -1;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-12" style="background: var(--color-primary); color: white;">
+    <div class="container text-center">
+        <h2 class="mb-4" style="color: white;">Ready to Experience Luxury?</h2>
+        <p
+            style="font-size: var(--font-size-xl); max-width: 800px; margin: 0 auto var(--spacing-2xl); color: rgba(255,255,255,0.9);">
+            Book your stay today and discover why guests choose Bookify for unforgettable experiences
+        </p>
+        <a asp-controller="Rooms" asp-action="Index" class="btn btn-primary btn-lg">Book Your Stay</a>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function createStarRating(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="fas fa-star text-warning"></i>';
+                } else if (i - 0.5 <= rating) {
+                    stars += '<i class="fas fa-star-half-alt text-warning"></i>';
+                } else {
+                    stars += '<i class="far fa-star text-warning"></i>';
+                }
+            }
+            return `<div class="rating">${stars}</div>`;
+        }
+
+        document.querySelectorAll('.star-rating-static').forEach(el => {
+            const rating = parseFloat(el.getAttribute('data-rating'));
+            el.innerHTML = createStarRating(rating);
+        });
+
+        function loadPopularRooms() {
+            fetch('/Room/GetPopularRooms')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('popularRooms');
+                    if (data.length === 0) {
+                        container.innerHTML = '<p class="text-center w-100">No popular rooms found.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = data.map(room => `
+                                <div class="card fade-in">
+                                  <img src="${room.firstImageUrl}" alt="${room.name}" class="card-image" onerror="this.src='https://via.placeholder.com/600x400/1E3A5F/D4AF37?text=${encodeURIComponent(room.name)}'">
+                                  <div class="card-content">
+                                    <h3 class="text-primary mb-2">${room.name}</h3>
+                                    ${createStarRating(room.rating)}
+                                    <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: var(--spacing-md);">
+                                      <div>
+                                        <span style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--color-primary);">$${room.pricePerNight}</span>
+                                        <span style="color: var(--color-gray-500); font-size: var(--font-size-sm);"> / night</span>
+                                      </div>
+                                      <a href="/Room/Details/${room.id}" class="btn btn-primary">View Details</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              `).join('');
+
+                    if (typeof addFadeInAnimation === 'function') {
+                        addFadeInAnimation();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading popular rooms:', error);
+                    document.getElementById('popularRooms').innerHTML = '<p class="text-center text-danger">Failed to load popular rooms.</p>';
+                });
+        }
+
+        function loadRecentReviews() {
+            fetch('/Room/GetRecentReviews')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('recentReviews');
+                    if (data.length === 0) {
+                        container.innerHTML = '<p class="text-center w-100">No reviews yet.</p>';
+                        return;
+                    }
+
+                    container.innerHTML = data.map(review => `
+                                <div class="card fade-in">
+                                    <div class="card-content">
+                                        ${createStarRating(review.rating)}
+                                        <p class="mt-3 mb-3" style="font-style: italic; color: var(--color-gray-700); overflow:hidden;">
+                                            ${review.comment}
+                                        </p>
+                                        <div>
+                                            <p style="font-weight: var(--font-weight-semibold); color: var(--color-primary);">
+                                                ${review.userName}
+                                            </p>
+                                            <p style="font-size: var(--font-size-sm); color: var(--color-gray-500);">
+                                                ${new Date(review.createdAt).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('');
+
+                    if (typeof addFadeInAnimation === 'function') {
+                        addFadeInAnimation();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading reviews:', error);
+                    document.getElementById('recentReviews').innerHTML = '<p class="text-center text-danger">Failed to load reviews.</p>';
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPopularRooms();
+            loadRecentReviews();
+            if (typeof addFadeInAnimation === 'function') {
+                addFadeInAnimation();
+            }
+        });
+    </script>
+}

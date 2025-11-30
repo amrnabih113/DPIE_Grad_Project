@@ -9,11 +9,16 @@
         public int Area { get; set; }
         public decimal PricePerNight { get; set; }
         public int Rating { get; set; }
-        public bool IsFavorite { get; set; } 
+        public bool IsFavorite { get; set; }
         public int NumberOfReviews { get; set; }
         public decimal? DiscountPercentage { get; set; }
         public decimal FinalPrice { get; set; }
         public IEnumerable<Amenity> Amenities { get; set; } = default!;
         public IEnumerable<RoomImage> RoomImages { get; set; } = default!;
+
+        // Review-related properties
+        public List<ReviewViewModel> Reviews { get; set; } = new();
+        public bool CanAddReview { get; set; }
+        public bool HasUserReviewed { get; set; }
     }
 }

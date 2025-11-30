@@ -1,23 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Bookify</title>
-    @* <script type="importmap"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Bookify.styles.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link href="~/css/styles.css" rel="stylesheet" />
 
 </head>
 <body>
-
-    @using Microsoft.AspNetCore.Identity
-    @inject SignInManager<ApplicationUser> SignInManager
-    @inject UserManager<ApplicationUser> UserManager
-
     @{
         string currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
         string currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
@@ -39,7 +34,7 @@
 
             <nav class="nav">
                 <a asp-controller="Home" asp-action="Index" class="@GetActiveClass("Home", "Index")">Home</a>
-                <a asp-controller="Rooms" asp-action="Index" class="@GetActiveClass("Rooms", "Index")">Rooms</a>
+                <a asp-controller="Room" asp-action="Index" class="@GetActiveClass("Room", "Index")">Rooms</a>
                 <a asp-controller="Home" asp-action="About" class="@GetActiveClass("Home", "About")">About</a>
                 <a asp-controller="Home" asp-action="Contact" class="@GetActiveClass("Home", "Contact")">Contact</a>
             </nav>
@@ -50,7 +45,6 @@
                     <div class="user-menu">
                         <div class="user-avatar" onclick="toggleUserDropdown()">
                             @{
-                                // منطق بسيط لاستخراج الأحرف الأولى (ممكن تحسينه بناء على تخزينك للاسم)
                                 var email = user.Email ?? "U";
                                 var initial = email.Substring(0, 1).ToUpper();
                             }
@@ -185,7 +179,7 @@
                     <h3>Quick Links</h3>
                     <div class="footer-links">
                         <a asp-controller="Home" asp-action="Index">Home</a>
-                        <a asp-controller="Rooms" asp-action="Index">Rooms</a>
+                        <a asp-controller="Room" asp-action="Index">Rooms</a>
                         <a asp-controller="Home" asp-action="About">About</a>
                         <a asp-controller="Home" asp-action="Contact">Contact</a>
                     </div>

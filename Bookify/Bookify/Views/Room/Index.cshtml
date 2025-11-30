@@ -1,121 +1,157 @@
 ﻿@model Bookify.Models.ViewModels.RoomIndexViewModel
+
 @{
-    ViewData["Title"] = "Find Your Room";
+    ViewData["Title"] = "Our Rooms";
 }
 
-<div class="container-fluid mt-4">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card shadow-sm p-3 mb-5 bg-white rounded">
-                <h5 class="card-title mb-3">Filter Rooms</h5>
 
-                <form asp-action="Index" method="get"
-                      data-ajax="true"
-                      data-ajax-method="get"
-                      data-ajax-update="#mainRoomContainer"
-                      data-ajax-mode="replace">
+<link rel="stylesheet" href="~/css/Room Styles/style.css" asp-append-version="true"/>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Price Range</label>
-                        <div class="input-group mb-2">
-                            <span class="input-group-text">$</span>
-                            <input type="number" class="form-control" name="minPrice" placeholder="Min" value="@Model.MinPrice">
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" class="form-control" name="maxPrice" placeholder="Max" value="@Model.MaxPrice">
-                        </div>
-                    </div>
+<main class="py-8">
+    <div class="container">
+        <h1 class="text-primary mb-4">Our Rooms & Suites</h1>
+        <p class="text-gray mb-6">Discover your perfect accommodation from our selection of luxury rooms</p>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Max Guests</label>
-                        <input type="number" class="form-control" name="maxGuests" value="@Model.NumberOfGeusts" min="1">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Room Type</label>
-                        <div class="d-flex flex-column gap-1">
-                            @foreach (var rt in Model.RoomTypes)
+        <div class="rooms-container">
+            <aside class="filter-sidebar">
+                <form id="filterForm">
+                    @Html.AntiForgeryToken()
+                    <div class="filter-group">
+                        <h3 class="filter-title">Room Type</h3>
+                        <div class="checkbox-group">
+                            @foreach (var type in Model.RoomTypes)
                             {
-                                var isChecked = Model.SelectedRoomTypeIds.Contains(int.Parse(rt.Value));
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="roomTypeIds" value="@rt.Value" id="type_@rt.Value" @(isChecked ? "checked" : "")>
-                                    <label class="form-check-label" for="type_@rt.Value">@rt.Text</label>
-                                </div>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="roomTypeIds" value="@type.Value" 
+                                           @(Model.SelectedRoomTypeIds.Contains(int.Parse(type.Value)) ? "checked" : "")
+                                           onchange="applyFilters(1)">
+                                    <span>@type.Text</span>
+                                </label>
                             }
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Amenities</label>
-                        <div class="d-flex flex-column gap-1" style="max-height: 200px; overflow-y: auto;">
-                            @foreach (var a in Model.Amenities)
+                     <div class="filter-group">
+                        <h3 class="filter-title">Amenities</h3>
+                        <div class="checkbox-group" style="max-height: 200px; overflow-y: auto;">
+                            @foreach (var amenity in Model.Amenities)
                             {
-                                var isChecked = Model.SelectedAmenityIds.Contains(int.Parse(a.Value));
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="amenityIds" value="@a.Value" id="amenity_@a.Value" @(isChecked ? "checked" : "")>
-                                    <label class="form-check-label" for="amenity_@a.Value">@a.Text</label>
-                                </div>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="amenityIds" value="@amenity.Value" 
+                                           @(Model.SelectedAmenityIds.Contains(int.Parse(amenity.Value)) ? "checked" : "")
+                                           onchange="applyFilters(1)">
+                                    <span>@amenity.Text</span>
+                                </label>
                             }
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Sort By</label>
-                        <select name="order" class="form-select">
-                            <option value="price_asc" selected="@(Model.SelectedOrder == "price_asc")">Price: Low to High</option>
-                            <option value="price_desc" selected="@(Model.SelectedOrder == "price_desc")">Price: High to Low</option>
-                            <option value="rating_desc" selected="@(Model.SelectedOrder == "rating_desc")">Rating: High to Low</option>
+                    <div class="filter-group">
+                        <h3 class="filter-title">Price Range</h3>
+                        <div class="price-inputs">
+                            <div style="flex: 1;">
+                                <label class="form-label">Min</label>
+                                <input type="number" name="minPrice" id="minPrice" class="form-input form-control" placeholder="0" min="0" 
+                                       value="@Model.MinPrice" onchange="applyFilters(1)">
+                            </div>
+                            <span>-</span>
+                            <div style="flex: 1;">
+                                <label class="form-label">Max</label>
+                                <input type="number" name="maxPrice" id="maxPrice" class="form-input form-control" placeholder="1000" min="0" 
+                                       value="@Model.MaxPrice" onchange="applyFilters(1)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h3 class="filter-title">Guests</h3>
+                        <select name="maxGuests" id="guests" class="form-select" onchange="applyFilters(1)">
+                            <!option value="" @(!Model.NumberOfGeusts.HasValue ? "selected" : "")>Any</!option>
+                            <!option value="1" @(Model.NumberOfGeusts == 1 ? "selected" : "")>1 Guest</!option>
+                            <!option value="2" @(Model.NumberOfGeusts == 2 ? "selected" : "")>2 Guests</!option>
+                            <!option value="3" @(Model.NumberOfGeusts == 3 ? "selected" : "")>3 Guests</!option>
+                            <!option value="4" @(Model.NumberOfGeusts == 4 ? "selected" : "")>4 Guests</!option>
+                            <!option value="5" @(Model.NumberOfGeusts >= 5 ? "selected" : "")>5+ Guests</!option>
                         </select>
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Apply Filters</button>
-
-                        <a asp-action="Index"
-                           class="btn btn-outline-secondary"
-                           data-ajax="true"
-                           data-ajax-method="get"
-                           data-ajax-update="#mainRoomContainer"
-                           data-ajax-mode="replace">
-                            Reset Filters
-                        </a>
-                    </div>
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="clearFilters()">Clear Filters</button>
                 </form>
-            </div>
-        </div>
+            </aside>
 
-        <div class="col-md-9">
-            <div id="loadingSpinner" style="display:none;" class="text-center my-3">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-
-            <div id="mainRoomContainer">
+            <div id="roomsContainer">
                 <partial name="_RoomListPartial" model="Model" />
             </div>
         </div>
     </div>
-</div>
+</main>
 
 @section Scripts {
+    <script>
+        function applyFilters(pageNumber) {
+            const form = document.getElementById('filterForm');
+            const formData = new FormData(form);
+            
+            const sortValue = document.getElementById('sortBy') ? document.getElementById('sortBy').value : 'popular';
+            formData.append('order', sortValue);
+            formData.append('page', pageNumber || 1);
+
+            const params = new URLSearchParams(formData);
+
+            const url = `@Url.Action("Index", "Room")?` + params.toString();
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('roomsContainer').innerHTML = html;
+                
+                window.history.pushState(null, '', url);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function clearFilters() {
+            document.getElementById('filterForm').reset();
+            
+            document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
+            
+            if(document.getElementById('sortBy')) document.getElementById('sortBy').value = 'popular';
+            
+            applyFilters(1);
+        }
+	</script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
 
-    <script>
-        $(document).on('click', '.favorite-btn', function (e) {
-            e.preventDefault();
-            var btn = $(this);
-            var roomId = btn.data("room-id");
+   
 
-            $.post("/Favorite/Toggle", { roomId: roomId }, function (data) {
-                     if (btn.find("i").hasClass("text-danger")) {
-                        btn.find("i").removeClass("text-danger").addClass("text-dark");
-                    } else {
-                        btn.find("i").removeClass("text-dark").addClass("text-danger");
-                    }
-                }
+    <script>
+        $(function() {
+            $(document).on('click', '.favorite-btn', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var icon = btn.find("i");
+
+                $.post("/Favorite/Toggle", { roomId: btn.data("room-id") })
+                    .done(function (data) {
+                        if (data.isFavorite) {
+                            icon.removeClass("fa-regular").addClass("fa-solid").css("color", "#ff0000");
+                        } else {
+                            icon.removeClass("fa-solid").addClass("fa-regular").css("color", "");
+                        }
+                    })
+                    .fail(function (xhr) {
+                        if (xhr.status === 401) {
+                            alert("Please Login First!");
+                            window.location.href = "/Identity/Account/Login";
+                        }
+                    });
             });
         });
     </script>
 }
+

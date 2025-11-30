@@ -4,130 +4,219 @@
     ViewData["Title"] = "Edit Room";
 }
 
-<h2>Edit Room</h2>
-
-<form method="post" enctype="multipart/form-data">
-    <input type="hidden" asp-for="Id" />
-
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="RoomTypeId" class="form-label">Room Type</label>
-        <select asp-for="RoomTypeId" class="form-select" asp-items="Model.RoomTypes"></select>
-        <span asp-validation-for="RoomTypeId" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="MaxGuests" class="form-label"></label>
-        <input asp-for="MaxGuests" class="form-control" />
-        <span asp-validation-for="MaxGuests" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="PriceForNight" class="form-label"></label>
-        <input asp-for="PriceForNight" class="form-control" />
-        <span asp-validation-for="PriceForNight" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Area" class="form-label"></label>
-        <input asp-for="Area" class="form-control" />
-        <span asp-validation-for="Area" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NoOfBeds" class="form-label"></label>
-        <input asp-for="NoOfBeds" class="form-control" />
-        <span asp-validation-for="NoOfBeds" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3 form-check">
-        <input asp-for="IsAvailable" class="form-check-input" />
-        <label asp-for="IsAvailable" class="form-check-label"></label>
-    </div>
-
-    <div class="mb-3 form-check">
-        <input asp-for="HasDiscount" class="form-check-input" />
-        <label asp-for="HasDiscount" class="form-check-label"></label>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="DiscountPercentage" class="form-label"></label>
-        <input asp-for="DiscountPercentage" class="form-control" />
-        <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="RoomNumber" class="form-label"></label>
-        <input asp-for="RoomNumber" class="form-control" />
-        <span asp-validation-for="RoomNumber" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label>Amenities</label>
-        <div class="form-check">
-            @foreach (var amenity in Model.Amenities)
-            {
-                <input type="checkbox"
-                       name="SelectedAmenityIds"
-                       value="@amenity.Value"
-                       class="form-check-input"
-                       @(Model.SelectedAmenityIds.Contains(int.Parse(amenity.Value)) ? "checked" : "") />
-
-                <label class="form-check-label">@amenity.Text</label>
-                <br />
-            }
+<div class="container py-6">
+    <div class="mb-6 d-flex align-items-center justify-content-between">
+        <div>
+            <h1 class="mb-2" style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--color-primary);">Edit Room</h1>
+            <p class="text-gray">Update room details, pricing, and images.</p>
         </div>
+        <a asp-action="Index" class="btn btn-ghost">
+            <i class="fas fa-arrow-left me-2"></i> Back to List
+        </a>
     </div>
 
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
 
-    <div class="mb-4">
-        <label class="form-label fw-bold">Current Images (Uncheck to Delete)</label>
+        <div class="grid grid-3" style="grid-template-columns: 2fr 1fr; gap: var(--spacing-xl);">
+            
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-xl);">
+                
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="mb-4 text-primary fw-bold"><i class="fas fa-info-circle me-2"></i>Basic Information</h3>
+                        
+                        <div class="form-group">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-input" placeholder="e.g. Deluxe Ocean View Suite" />
+                            <span asp-validation-for="Name" class="text-danger font-size-sm"></span>
+                        </div>
 
-        @if (Model.ExistingRoomImages != null && Model.ExistingRoomImages.Any())
-        {
-            <div class="row">
-                @foreach (var img in Model.ExistingRoomImages)
-                {
-                    <div class="col-md-3 col-sm-4 mb-3 text-center">
-                        <div class="card p-2">
-                            <img src="@img.ImageUrl.Replace("\\", "/")" class="img-thumbnail mb-2" style="height: 150px; object-fit: cover;">
+                        <div class="form-group">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-textarea" rows="4" placeholder="Describe the room features and view..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger font-size-sm"></span>
+                        </div>
 
-                            <div class="form-check form-switch d-flex justify-content-center">
-                                <input class="form-check-input me-2" type="checkbox" name="KeepImageIds" value="@img.Id" checked id="img_@img.Id">
-                                <label class="form-check-label text-success fw-bold" for="img_@img.Id">Keep?</label>
+                        <div class="grid grid-2" style="gap: var(--spacing-md);">
+                            <div class="form-group">
+                                <label asp-for="RoomTypeId" class="form-label">Room Type</label>
+                                <select asp-for="RoomTypeId" class="form-select" asp-items="Model.RoomTypes"></select>
+                                <span asp-validation-for="RoomTypeId" class="text-danger font-size-sm"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label asp-for="RoomNumber" class="form-label"></label>
+                                <input asp-for="RoomNumber" class="form-input" />
+                                <span asp-validation-for="RoomNumber" class="text-danger font-size-sm"></span>
                             </div>
                         </div>
                     </div>
-                }
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="mb-4 text-primary fw-bold"><i class="fas fa-images me-2"></i>Room Images</h3>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Current Images</label>
+                            @if (Model.ExistingRoomImages != null && Model.ExistingRoomImages.Any())
+                            {
+                                <div class="grid grid-3" style="gap: var(--spacing-md);">
+                                    @foreach (var img in Model.ExistingRoomImages)
+                                    {
+                                        <div class="position-relative border rounded overflow-hidden">
+                                            <img src="@img.ImageUrl.Replace("\\", "/")" style="width: 100%; height: 120px; object-fit: cover;">
+                                            <div class="p-2 bg-light border-top d-flex align-items-center justify-content-between">
+                                                <span class="text-sm text-gray">Keep?</span>
+                                                <div class="form-check form-switch m-0">
+                                                    <input class="form-check-input" type="checkbox" name="KeepImageIds" value="@img.Id" checked id="img_@img.Id">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="p-4 text-center bg-gray-50 rounded border border-dashed">
+                                    <p class="text-gray">No images available for this room.</p>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <label class="form-label fw-bold">Add New Images</label>
+                            <div class="p-4 text-center bg-gray-50 rounded border border-dashed position-relative hover-bg-gray-100 transition-base">
+                                <input asp-for="RoomImages" type="file" multiple class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" accept="image/*" />
+                                <i class="fas fa-cloud-upload-alt text-3xl text-primary mb-2"></i>
+                                <p class="text-sm text-gray fw-medium">Click or drag files to upload</p>
+                                <span asp-validation-for="RoomImages" class="text-danger font-size-sm"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="mb-4 text-primary fw-bold"><i class="fas fa-concierge-bell me-2"></i>Amenities</h3>
+                        <div class="grid grid-3" style="gap: var(--spacing-sm);">
+                            @foreach (var amenity in Model.Amenities)
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                           name="SelectedAmenityIds"
+                                           value="@amenity.Value"
+                                           class="form-check-input"
+                                           id="amenity_@amenity.Value"
+                                           @(Model.SelectedAmenityIds.Contains(int.Parse(amenity.Value)) ? "checked" : "") />
+                                    <label class="form-check-label ms-2" for="amenity_@amenity.Value">@amenity.Text</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        }
-        else
-        {
-            <p class="text-muted">No images available for this room.</p>
-        }
-    </div>
 
-    <div class="mb-3">
-        <label class="form-label fw-bold">Add New Images</label>
-        <input asp-for="RoomImages" type="file" multiple class="form-control" accept="image/*" />
-        <span asp-validation-for="RoomImages" class="text-danger"></span>
-    </div>
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-xl);">
+                
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="mb-4 text-primary fw-bold"><i class="fas fa-tag me-2"></i>Pricing & Status</h3>
+                        
+                        <div class="form-group">
+                            <label asp-for="PriceForNight" class="form-label"></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="PriceForNight" class="form-input" />
+                            </div>
+                            <span asp-validation-for="PriceForNight" class="text-danger font-size-sm"></span>
+                        </div>
 
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+                        <div class="form-group">
+                            <div class="form-check form-switch">
+                                <input asp-for="HasDiscount" class="form-check-input" id="hasDiscountToggle" />
+                                <label asp-for="HasDiscount" class="form-check-label fw-medium">Apply Discount</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="discountSection">
+                            <label asp-for="DiscountPercentage" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="DiscountPercentage" class="form-input" />
+                                <span class="input-group-text">%</span>
+                            </div>
+                            <span asp-validation-for="DiscountPercentage" class="text-danger font-size-sm"></span>
+                        </div>
+
+                        <hr class="my-4 border-gray-200" />
+
+                        <div class="form-group mb-0">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsAvailable" class="form-check-input" />
+                                <label asp-for="IsAvailable" class="form-check-label fw-medium text-success">Available for Booking</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="mb-4 text-primary fw-bold"><i class="fas fa-ruler-combined me-2"></i>Specifications</h3>
+                        
+                        <div class="form-group">
+                            <label asp-for="MaxGuests" class="form-label"></label>
+                            <input asp-for="MaxGuests" class="form-input" />
+                            <span asp-validation-for="MaxGuests" class="text-danger font-size-sm"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="NoOfBeds" class="form-label"></label>
+                            <input asp-for="NoOfBeds" class="form-input" />
+                            <span asp-validation-for="NoOfBeds" class="text-danger font-size-sm"></span>
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <label asp-for="Area" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Area" class="form-input" />
+                                <span class="input-group-text">m²</span>
+                            </div>
+                            <span asp-validation-for="Area" class="text-danger font-size-sm"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-save me-2"></i> Save Changes
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline w-100">Cancel</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            function toggleDiscount() {
+                if ($('#hasDiscountToggle').is(':checked')) {
+                    $('#discountSection').slideDown();
+                } else {
+                    $('#discountSection').slideUp();
+                }
+            }
+            
+            toggleDiscount();
+            
+            $('#hasDiscountToggle').change(toggleDiscount);
+        });
+    </script>
 }

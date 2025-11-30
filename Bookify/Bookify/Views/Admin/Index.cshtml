@@ -1,0 +1,364 @@
+﻿@model Bookify.Models.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Bookify</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --color-primary: #1E3A5F;
+            --color-accent: #D4AF37;
+            --color-gray-50: #F9FAFB;
+            --color-gray-200: #E5E7EB;
+            --color-gray-600: #4B5563;
+            --radius-lg: 0.5rem;
+            --radius-md: 0.375rem;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--color-gray-50);
+            margin: 0;
+        }
+
+        .admin-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: var(--spacing-2xl);
+            min-height: calc(100vh - 5rem);
+        }
+
+        @@media (max-width: 1024px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .admin-sidebar {
+            background: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+            position: sticky;
+            top: calc(5rem + var(--spacing-lg));
+        }
+
+        .admin-nav-item {
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            transition: 0.2s;
+        }
+
+            .admin-nav-item:hover {
+                background: var(--color-gray-50);
+            }
+
+            .admin-nav-item.active {
+                background: var(--color-primary);
+                color: white;
+            }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .stat-card {
+            background: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--color-accent);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+            .admin-section.active {
+                display: block;
+            }
+
+        .card {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .text-primary {
+            color: var(--color-primary) !important;
+        }
+
+        .text-gray {
+            color: var(--color-gray-600) !important;
+        }
+
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .badge-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="background: var(--color-primary); color: white; padding: var(--spacing-lg) 0;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <a asp-controller="Home" asp-action="Index" class="logo" style="color: white; text-decoration: none; font-size: 1.5rem; font-weight: bold;">
+                    <span>Bookify Admin</span>
+                </a>
+                <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <span>@Model.AdminName</span>
+                    <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="py-8">
+        <div class="container">
+            <div class="admin-container">
+                <aside class="admin-sidebar">
+                    <h3 class="text-primary mb-4">Navigation</h3>
+                    <div class="admin-nav">
+                        <div class="admin-nav-item active" onclick="switchSection('dashboard', this)">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </div>
+                        <div class="admin-nav-item" onclick="switchSection('bookings', this)">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <span>All Bookings</span>
+                        </div>
+                        <div class="admin-nav-item" onclick="switchSection('rooms', this)">
+                            <i class="fa-solid fa-bed"></i>
+                            <span>Manage Rooms</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--color-gray-200);">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary w-100">View Website</a>
+                    </div>
+                </aside>
+
+                <div>
+                    <div id="dashboardSection" class="admin-section active">
+                        <h2 class="text-primary mb-6">Dashboard Overview</h2>
+
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">@Model.TotalBookings</div>
+                                <div class="stat-label">Total Bookings</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">@Model.ConfirmedBookings</div>
+                                <div class="stat-label">Confirmed Bookings</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">@Model.AvailableRooms</div>
+                                <div class="stat-label">Available Rooms</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">@Model.TotalRevenue.ToString("C0")</div>
+                                <div class="stat-label">Total Revenue</div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-content">
+                                <h3 class="text-primary mb-4">Recent Bookings</h3>
+                                @if (!Model.RecentBookings.Any())
+                                {
+                                    <p class="text-gray">No bookings yet</p>
+                                }
+                                else
+                                {
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Guest</th>
+                                                <th>Room</th>
+                                                <th>Check-in</th>
+                                                <th>Status</th>
+                                                <th class="text-end">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var booking in Model.RecentBookings)
+                                            {
+                                                <tr>
+                                                    <td>@booking.User.FullName</td>
+                                                    <td>@booking.Room.Name</td>
+                                                    <td>@booking.CheckIn.ToShortDateString()</td>
+                                                    <td>
+                                                        @{
+                                                            var status = booking.PaymentStatus ?? "Pending";
+                                                            var badgeClass = status == "Confirmed" ? "badge-success" : (status == "Cancelled" ? "badge-error" : "badge-warning");
+                                                        }
+                                                        <span class="@badgeClass">@status</span>
+                                                    </td>
+                                                    <td class="text-end fw-bold">@booking.TotalPrice.ToString("C0")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="bookingsSection" class="admin-section">
+                        <h2 class="text-primary mb-6">All Bookings</h2>
+
+                        <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-lg);">
+                            <select id="bookingFilter" class="form-select" style="max-width: 200px;" onchange="filterBookingsTable()">
+                                <option value="all">All Bookings</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Cancelled">Cancelled</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                            <span class="text-gray">@Model.AllBookings.Count() bookings</span>
+                        </div>
+
+                        <div id="allBookingsList">
+                            @foreach (var booking in Model.AllBookings)
+                            {
+                                var status = booking.PaymentStatus ?? "Pending";
+                                <div class="card mb-3 booking-row" data-status="@status">
+                                    <div class="card-content">
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: var(--spacing-lg); align-items: center;">
+                                            <div>
+                                                <p style="font-weight: 600;">@booking.User.FullName</p>
+                                                <p class="text-gray small">@booking.User.Email</p>
+                                            </div>
+                                            <div>
+                                                <p style="font-weight: 600;">@booking.Room.Name</p>
+                                                <p class="text-gray small">@booking.CheckIn.ToShortDateString() - @booking.CheckOut.ToShortDateString()</p>
+                                            </div>
+                                            <div>
+                                                <p style="font-weight: 600;">@booking.TotalPrice.ToString("C0")</p>
+                                                <p class="text-gray small">@booking.NumberOfGuests guest(s)</p>
+                                            </div>
+                                            @{
+                                                var badgeClass = status == "Confirmed" ? "badge-success" : (status == "Cancelled" ? "badge-error" : "badge-warning");
+                                            }
+                                            <span class="@badgeClass">@status</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div id="roomsSection" class="admin-section">
+                        <div class="d-flex justify-content-between align-items-center mb-6">
+                            <h2 class="text-primary">Manage Rooms</h2>
+                            <a asp-controller="Room" asp-action="Add" class="btn btn-primary">Add New Room</a>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            @foreach (var room in Model.Rooms)
+                            {
+                                <div class="card">
+                                    @{
+                                        var imageUrl = (room.RoomImages != null && room.RoomImages.Any())
+                                        ? room.RoomImages.First().ImageUrl
+                                        : "https://via.placeholder.com/600x400";
+                                    }
+                                    <img src="@imageUrl" alt="@room.Name" style="width:100%; height:200px; object-fit:cover; border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                                    <div class="card-content" style="padding: 1rem;">
+                                        <h3 class="text-primary mb-2">@room.Name</h3>
+                                        <p class="text-gray mb-2">@(room.RoomType?.Name ?? "Unknown Type")</p>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span style="font-size: 1.25rem; font-weight: bold; color: var(--color-accent);">@room.PriceForNight.ToString("C0")/night</span>
+
+                                            <div>
+                                                <a asp-controller="Room" asp-action="Details" asp-route-id="@room.Id" class="btn btn-outline-secondary btn-sm">View</a>
+                                                <a asp-controller="Room" asp-action="Edit" asp-route-id="@room.Id" class="btn btn-outline-primary btn-sm">Edit</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function switchSection(sectionId, element) {
+            document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            document.querySelectorAll('.admin-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId + 'Section').classList.add('active');
+        }
+
+        function filterBookingsTable() {
+            const filter = document.getElementById('bookingFilter').value;
+            const rows = document.querySelectorAll('.booking-row');
+
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                if (filter === 'all' || status === filter) {
+                    row.style.display = 'block';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

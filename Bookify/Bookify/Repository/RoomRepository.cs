@@ -34,12 +34,14 @@ namespace Bookify.Repository
         public async Task<IEnumerable<Room>> SearchWithFiltersAsync(int minPrice, int maxPrice, int MaxGuests, IEnumerable<RoomType> RoomTypes, IEnumerable<Amenity> Amenities)
         {
             var query = _dbset.Include(r => r.RoomType).Include(r=>r.RoomImages)
-                .Include(r => r.RoomAmenities)
+                .Include(r => r.RoomAmenities!)
                 .ThenInclude(ra => ra.Amenity)
                 .AsQueryable();
 
             query = query.Where(r=>r.PriceForNight >= (decimal)minPrice &&  r.PriceForNight <= (decimal)maxPrice);
-            query = query.Where(r => r.MaxGuests >= MaxGuests);
+
+            if(MaxGuests > 0)
+                query = query.Where(r => r.MaxGuests == MaxGuests);
 
             if (RoomTypes != null && RoomTypes.Any())
             {
@@ -51,7 +53,7 @@ namespace Bookify.Repository
             {
                 var amenityIds = Amenities.Select(a => a.Id).ToList();
                 foreach (var amenityId in amenityIds)
-                    query = query.Where(r => r.RoomAmenities.Any(ra => ra.AmenityId == amenityId));
+                    query = query.Where(r => r.RoomAmenities!.Any(ra => ra.AmenityId == amenityId));
             }
 
             return await query.ToListAsync();
