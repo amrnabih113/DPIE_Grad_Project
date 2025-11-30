@@ -88,6 +88,10 @@ namespace Bookify.Controllers
             };
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
+                Response.Headers.Append("Vary", "X-Requested-With"); 
+                Response.Headers.Append("Cache-Control", "no-cache, no-store, must-revalidate");
+                Response.Headers.Append("Pragma", "no-cache");
+                Response.Headers.Append("Expires", "0");
                 return PartialView("_RoomListPartial", vm);
             }
             return View(vm);
