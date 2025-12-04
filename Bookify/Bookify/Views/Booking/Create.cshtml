@@ -1,0 +1,272 @@
+@model Bookify.Models.ViewModels.CreateBookingViewModel
+@{
+    ViewData["Title"] = "Complete Your Booking";
+}
+
+<style>
+    .booking-container {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: var(--spacing-2xl);
+        margin-top: var(--spacing-xl);
+    }
+
+    @@media (max-width: 1024px) {
+        .booking-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .booking-summary {
+        background: white;
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        height: fit-content;
+        position: sticky;
+        top: calc(5rem + var(--spacing-lg));
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: var(--spacing-md) 0;
+        border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        padding: var(--spacing-lg) 0;
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+    }
+
+    .room-summary-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    @@media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<main class="py-8">
+    <div class="container">
+        <h1 class="text-primary mb-2">Complete Your Booking</h1>
+        <p class="text-gray mb-6">Please fill in your details to complete the reservation</p>
+
+        <div class="booking-container">
+            <!-- Booking Form -->
+            <div>
+                <form asp-action="Create" method="post" class="card" id="bookingForm">
+                    <div class="card-content">
+                        <input type="hidden" asp-for="RoomId" />
+                        <input type="hidden" asp-for="RoomName" />
+                        <input type="hidden" asp-for="RoomType" />
+                        <input type="hidden" asp-for="RoomImage" />
+                        <input type="hidden" asp-for="PricePerNight" />
+                        <input type="hidden" asp-for="MaxGuests" />
+
+                        <h3 class="text-primary mb-4">Guest Information</h3>
+
+                        <div class="form-group">
+                            <label asp-for="FirstName" class="form-label">First Name *</label>
+                            <input asp-for="FirstName" class="form-input" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="LastName" class="form-label">Last Name *</label>
+                            <input asp-for="LastName" class="form-input" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label">Email *</label>
+                            <input asp-for="Email" type="email" class="form-input" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Phone" class="form-label">Phone *</label>
+                            <input asp-for="Phone" type="tel" class="form-input" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <h3 class="text-primary mb-4 mt-6">Booking Details</h3>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label asp-for="CheckIn" class="form-label">Check-in Date *</label>
+                                <input asp-for="CheckIn" type="date" class="form-input" id="checkInDate" />
+                                <span asp-validation-for="CheckIn" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="CheckOut" class="form-label">Check-out Date *</label>
+                                <input asp-for="CheckOut" type="date" class="form-input" id="checkOutDate" />
+                                <span asp-validation-for="CheckOut" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="NumberOfGuests" class="form-label">Number of Guests *</label>
+                            <select asp-for="NumberOfGuests" class="form-select" id="guestsSelect">
+                                <option value="">Select guests</option>
+                                @for (int i = 1; i <= Model.MaxGuests; i++)
+                                {
+                                    <option value="@i">@i Guest@(i > 1 ? "s" : "")</option>
+                                }
+                            </select>
+                            <span asp-validation-for="NumberOfGuests" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="SpecialRequests" class="form-label">Special Requests (Optional)</label>
+                            <textarea asp-for="SpecialRequests" class="form-textarea"
+                                      placeholder="Any special requirements or preferences..."></textarea>
+                            <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                            <i class="fas fa-check-circle"></i> Confirm Booking
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Booking Summary -->
+            <div>
+                <div class="booking-summary" id="bookingSummary">
+                    <h3 class="text-primary mb-4">Booking Summary</h3>
+                    <div id="summaryContent">
+                        <div style="margin-bottom: var(--spacing-lg);">
+                            @if (!string.IsNullOrEmpty(Model.RoomImage))
+                            {
+                                <img src="@Model.RoomImage" alt="@Model.RoomName" class="room-summary-image"
+                                     onerror="this.src='/images/placeholder-room.jpg'">
+                            }
+                            else
+                            {
+                                <img src="/images/placeholder-room.jpg" alt="@Model.RoomName" class="room-summary-image">
+                            }
+                            <h4 class="text-primary">@Model.RoomName</h4>
+                            <p class="text-gray" style="font-size: var(--font-size-sm);">@Model.RoomType</p>
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Price per night</span>
+                            <span style="font-weight: var(--font-weight-semibold);">$@Model.PricePerNight.ToString("N2")</span>
+                        </div>
+
+                        <div class="summary-item" id="nightsRow" style="display: none;">
+                            <span>Number of nights</span>
+                            <span style="font-weight: var(--font-weight-semibold);" id="nightsCount">0</span>
+                        </div>
+
+                        <div class="summary-item" id="subtotalRow" style="display: none;">
+                            <span>Subtotal</span>
+                            <span style="font-weight: var(--font-weight-semibold);" id="subtotalAmount">$0.00</span>
+                        </div>
+
+                        <div class="summary-item" id="taxRow" style="display: none;">
+                            <span>Tax (10%)</span>
+                            <span style="font-weight: var(--font-weight-semibold);" id="taxAmount">$0.00</span>
+                        </div>
+
+                        <div class="summary-total" id="totalRow" style="display: none;">
+                            <span>Total</span>
+                            <span id="totalAmount">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkInInput = document.getElementById('checkInDate');
+            const checkOutInput = document.getElementById('checkOutDate');
+            const pricePerNight = @Model.PricePerNight;
+
+            // Set minimum dates
+            const today = new Date().toISOString().split('T')[0];
+            checkInInput.min = today;
+            checkOutInput.min = today;
+
+            function updateSummary() {
+                const checkIn = checkInInput.value;
+                const checkOut = checkOutInput.value;
+
+                if (checkIn && checkOut) {
+                    const checkInDate = new Date(checkIn);
+                    const checkOutDate = new Date(checkOut);
+                    const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
+
+                    if (nights > 0) {
+                        const subtotal = pricePerNight * nights;
+                        const tax = subtotal * 0.10;
+                        const total = subtotal + tax;
+
+                        document.getElementById('nightsRow').style.display = 'flex';
+                        document.getElementById('subtotalRow').style.display = 'flex';
+                        document.getElementById('taxRow').style.display = 'flex';
+                        document.getElementById('totalRow').style.display = 'flex';
+
+                        document.getElementById('nightsCount').textContent = nights;
+                        document.getElementById('subtotalAmount').textContent = '$' + subtotal.toFixed(2);
+                        document.getElementById('taxAmount').textContent = '$' + tax.toFixed(2);
+                        document.getElementById('totalAmount').textContent = '$' + total.toFixed(2);
+                    } else {
+                        hideCalculations();
+                    }
+                } else {
+                    hideCalculations();
+                }
+            }
+
+            function hideCalculations() {
+                document.getElementById('nightsRow').style.display = 'none';
+                document.getElementById('subtotalRow').style.display = 'none';
+                document.getElementById('taxRow').style.display = 'none';
+                document.getElementById('totalRow').style.display = 'none';
+            }
+
+            function updateCheckOutMinDate() {
+                const checkIn = checkInInput.value;
+                if (checkIn) {
+                    const checkInDate = new Date(checkIn);
+                    checkInDate.setDate(checkInDate.getDate() + 1);
+                    checkOutInput.min = checkInDate.toISOString().split('T')[0];
+                }
+                updateSummary();
+            }
+
+            checkInInput.addEventListener('change', updateCheckOutMinDate);
+            checkOutInput.addEventListener('change', updateSummary);
+
+            // Initial update if values exist
+            updateSummary();
+        });
+    </script>
+}

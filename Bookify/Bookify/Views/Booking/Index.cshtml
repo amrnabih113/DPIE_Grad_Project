@@ -1,0 +1,334 @@
+@model IEnumerable<Bookify.Data.Models.Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+    var statusFilter = ViewBag.StatusFilter as string ?? "all";
+}
+
+<style>
+    .bookings-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-xl);
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+    }
+
+    .booking-card {
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        margin-bottom: var(--spacing-lg);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .booking-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .booking-card-header {
+        display: grid;
+        grid-template-columns: 200px 1fr auto;
+        gap: var(--spacing-lg);
+        padding: var(--spacing-lg);
+    }
+
+    @@media (max-width: 768px) {
+        .booking-card-header {
+            grid-template-columns: 1fr;
+        }
+
+        .bookings-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    .booking-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: var(--radius-md);
+    }
+
+    .booking-status {
+        display: inline-flex;
+        padding: var(--spacing-xs) var(--spacing-md);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+    }
+
+    .status-confirmed {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+    }
+
+    .status-pending {
+        background: rgba(251, 191, 36, 0.1);
+        color: #D97706;
+    }
+
+    .status-cancelled {
+        background: rgba(239, 68, 68, 0.1);
+        color: #DC2626;
+    }
+
+    .status-completed {
+        background: rgba(99, 102, 241, 0.1);
+        color: #4F46E5;
+    }
+
+    .booking-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-md);
+    }
+
+    .booking-detail-item p:first-child {
+        font-size: var(--font-size-sm);
+        color: var(--color-gray-500);
+        margin-bottom: 4px;
+    }
+
+    .booking-detail-item p:last-child {
+        font-weight: var(--font-weight-semibold);
+    }
+
+    .booking-actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        justify-content: center;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: var(--spacing-3xl);
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+    }
+
+    .empty-state svg {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto var(--spacing-md);
+        color: var(--color-gray-400);
+    }
+
+    .filter-select {
+        min-width: 200px;
+    }
+
+    .btn-cancel {
+        color: #DC2626 !important;
+        border-color: #DC2626 !important;
+    }
+
+    .btn-cancel:hover {
+        background: #DC2626 !important;
+        color: white !important;
+    }
+
+    .alert {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .alert-success {
+        background: #DEF7EC;
+        color: #03543F;
+    }
+
+    .alert-danger {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+</style>
+
+<main class="py-8">
+    <div class="container">
+        <div class="bookings-header">
+            <div>
+                <h1 class="text-primary mb-2">My Bookings</h1>
+                <p class="text-gray">View and manage your hotel reservations</p>
+            </div>
+            <div style="display: flex; gap: var(--spacing-md); align-items: center; flex-wrap: wrap;">
+                <form method="get" asp-action="Index" id="filterForm">
+                    <select name="status" class="form-select filter-select" onchange="document.getElementById('filterForm').submit()">
+                        <option value="all" selected="@(statusFilter == "all")">All Bookings</option>
+                        <option value="Confirmed" selected="@(statusFilter == "Confirmed")">Confirmed</option>
+                        <option value="Pending" selected="@(statusFilter == "Pending")">Pending</option>
+                        <option value="Cancelled" selected="@(statusFilter == "Cancelled")">Cancelled</option>
+                        <option value="Completed" selected="@(statusFilter == "Completed")">Completed</option>
+                    </select>
+                </form>
+                <a asp-controller="Room" asp-action="Index" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Book a Room
+                </a>
+            </div>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle" style="font-size: 1.25rem;"></i>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle" style="font-size: 1.25rem;"></i>
+                <span>@TempData["ErrorMessage"]</span>
+            </div>
+        }
+
+        <div id="bookingsList">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var booking in Model.OrderByDescending(b => b.CreatedAt))
+                {
+                    var statusClass = booking.PaymentStatus?.ToLower() switch
+                    {
+                        "confirmed" => "status-confirmed",
+                        "pending" => "status-pending",
+                        "cancelled" => "status-cancelled",
+                        "completed" => "status-completed",
+                        _ => "status-pending"
+                    };
+
+                    var nights = (booking.CheckOut - booking.CheckIn).Days;
+
+                    <div class="booking-card">
+                        <div class="booking-card-header">
+                            <!-- Room Image -->
+                            <div>
+                                @if (booking.Room?.RoomImages?.Any() == true)
+                                {
+                                    <img src="@booking.Room.RoomImages.First().ImageUrl" 
+                                         alt="@booking.Room.Name" 
+                                         class="booking-image"
+                                         onerror="this.src='/images/placeholder-room.jpg'">
+                                }
+                                else
+                                {
+                                    <img src="/images/placeholder-room.jpg" alt="Room" class="booking-image">
+                                }
+                            </div>
+
+                            <!-- Booking Info -->
+                            <div>
+                                <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: var(--spacing-sm); flex-wrap: wrap; gap: var(--spacing-sm);">
+                                    <div>
+                                        <h3 class="text-primary" style="margin-bottom: 4px;">@(booking.Room?.Name ?? "Room #" + booking.RoomId)</h3>
+                                        <p class="text-gray" style="font-size: var(--font-size-sm);">@(booking.Room?.RoomType?.Name ?? "Standard Room")</p>
+                                    </div>
+                                    <span class="booking-status @statusClass">
+                                        @(booking.PaymentStatus ?? "Pending")
+                                    </span>
+                                </div>
+
+                                <div class="booking-details-grid">
+                                    <div class="booking-detail-item">
+                                        <p><i class="fas fa-calendar-check text-primary"></i> Check-in</p>
+                                        <p>@booking.CheckIn.ToString("MMM dd, yyyy")</p>
+                                    </div>
+                                    <div class="booking-detail-item">
+                                        <p><i class="fas fa-calendar-times text-primary"></i> Check-out</p>
+                                        <p>@booking.CheckOut.ToString("MMM dd, yyyy")</p>
+                                    </div>
+                                    <div class="booking-detail-item">
+                                        <p><i class="fas fa-moon text-primary"></i> Duration</p>
+                                        <p>@nights Night@(nights > 1 ? "s" : "")</p>
+                                    </div>
+                                    <div class="booking-detail-item">
+                                        <p><i class="fas fa-users text-primary"></i> Guests</p>
+                                        <p>@booking.NumberOfGuests Guest@(booking.NumberOfGuests > 1 ? "s" : "")</p>
+                                    </div>
+                                    <div class="booking-detail-item">
+                                        <p><i class="fas fa-dollar-sign text-primary"></i> Total Price</p>
+                                        <p style="color: var(--color-accent);">$@booking.TotalPrice.ToString("N2")</p>
+                                    </div>
+                                </div>
+
+                                <p style="font-size: var(--font-size-xs); color: var(--color-gray-500); margin-top: var(--spacing-md);">
+                                    <i class="fas fa-clock"></i> Booked on @booking.CreatedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")
+                                </p>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="booking-actions">
+                                <a asp-controller="Room" asp-action="Details" asp-route-id="@booking.RoomId" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-door-open"></i> View Room
+                                </a>
+                                <a asp-action="Details" asp-route-id="@booking.Id" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </a>
+                                @if (booking.PaymentStatus?.ToLower() != "cancelled" && booking.CheckIn > DateTime.Now)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@booking.Id" method="post" 
+                                          onsubmit="return confirm('Are you sure you want to cancel this booking?');"
+                                          style="margin: 0;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline btn-sm btn-cancel" style="width: 100%;">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                    </svg>
+                    <h3 class="text-primary mb-2">No bookings found</h3>
+                    @if (statusFilter != "all")
+                    {
+                        <p class="text-gray mb-4">No @statusFilter.ToLower() bookings found. Try a different filter.</p>
+                        <a asp-action="Index" class="btn btn-outline mb-2">
+                            <i class="fas fa-filter"></i> Clear Filter
+                        </a>
+                    }
+                    else
+                    {
+                        <p class="text-gray mb-4">You haven't made any reservations yet</p>
+                    }
+                    <a asp-controller="Room" asp-action="Index" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Browse Rooms
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                }, 5000);
+            });
+        });
+    </script>
+}

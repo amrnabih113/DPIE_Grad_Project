@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bookify.Controllers
 {
-        [Authorize(Roles = "Admin")] // تأكد أن الرول اسمها Admin في الداتا بيز
+        [Authorize(Roles = "Admin")]
         public class AdminController : Controller
         {
             private readonly IBookingService _bookingService;
@@ -22,26 +22,19 @@ namespace Bookify.Controllers
 
             public async Task<IActionResult> Index()
             {
-                // 1. جلب البيانات
                 var allBookings = await _bookingService.GetAllAsync();
                 var allRooms = await _roomService.GetAllForAdminAsync();
                 var user = await _userManager.GetUserAsync(User);
 
-                // 2. تجهيز الـ ViewModel
                 var model = new AdminDashboardViewModel
                 {
                     AdminName = user != null ? user.FullName : "Admin",
-
-                    // الإحصائيات
                     TotalBookings = allBookings.Count(),
-                    // افترضنا أن الحالة Confirmed أو الدفع تم (غير Pending/Cancelled)
                     ConfirmedBookings = allBookings.Count(b => b.PaymentStatus == "Confirmed"),
                     AvailableRooms = allRooms.Count(r => r.IsAvailable),
                     TotalRevenue = allBookings
-                                    .Where(b => b.PaymentStatus == "Confirmed")
+                                    .Where(b => b.PaymentStatus == "Confirmed" || b.PaymentStatus == "Completed")
                                     .Sum(b => b.TotalPrice),
-
-                    // الجداول
                     RecentBookings = allBookings.OrderByDescending(b => b.CreatedAt).Take(5),
                     AllBookings = allBookings.OrderByDescending(b => b.CreatedAt),
                     Rooms = allRooms
@@ -49,5 +42,44 @@ namespace Bookify.Controllers
 
                 return View(model);
             }
+
+            [HttpPost]
+            public async Task<IActionResult> UpdateBookingStatus([FromBody] UpdateBookingStatusRequest request)
+            {
+                try
+                {
+                    if (request == null || request.BookingId <= 0)
+                    {
+                        return Json(new { success = false, message = "Invalid request" });
+                    }
+
+                    var validStatuses = new[] { "Pending", "Confirmed", "Cancelled", "Completed" };
+                    if (!validStatuses.Contains(request.Status))
+                    {
+                        return Json(new { success = false, message = "Invalid status" });
+                    }
+
+                    var booking = await _bookingService.GetByIdAsync(request.BookingId);
+                    if (booking == null)
+                    {
+                        return Json(new { success = false, message = "Booking not found" });
+                    }
+
+                    booking.PaymentStatus = request.Status;
+                    await _bookingService.UpdateBookingAsync(booking);
+
+                    return Json(new { success = true, message = "Status updated successfully" });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
+            }
+        }
+
+        public class UpdateBookingStatusRequest
+        {
+            public int BookingId { get; set; }
+            public string Status { get; set; } = string.Empty;
         }
 }

@@ -28,7 +28,7 @@ namespace Bookify.services
         {
             var bookings = await _bookingRepository.FindAsync(
                 b => b.Id == id,
-                includeProperties: "User,Room");
+                includeProperties: "User,Room,Room.RoomType,Room.RoomImages");
             return bookings.FirstOrDefault();
         }
 
@@ -79,7 +79,7 @@ namespace Bookify.services
         {
             return await _bookingRepository.FindAsync(
                 b => b.UserId == userId,
-                includeProperties: "Room");
+                includeProperties: "Room,Room.RoomType,Room.RoomImages");
         }
 
         public async Task<IEnumerable<Booking>> GetBookingsByRoomIdAsync(int roomId)

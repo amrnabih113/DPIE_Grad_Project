@@ -125,32 +125,393 @@
         }
 
         .badge-success {
-            background-color: #d1fae5;
-            color: #065f46;
-            padding: 5px 10px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
         }
 
         .badge-error {
-            background-color: #fee2e2;
-            color: #991b1b;
-            padding: 5px 10px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
         }
 
         .badge-warning {
-            background-color: #fef3c7;
-            color: #92400e;
-            padding: 5px 10px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 6px 14px;
             border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-completed {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+            border-color: var(--color-accent);
+        }
+
+        .booking-card-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .booking-card-body {
+            padding: 1.5rem;
+        }
+
+        .booking-info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .booking-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .booking-info-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .booking-info-value {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+
+        .booking-info-sub {
             font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .booking-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .status-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-weight: 500;
+            min-width: 150px;
+            font-size: 0.85rem;
+        }
+
+        .status-select:hover {
+            border-color: var(--color-primary);
+            background: #f8fafc;
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
+        }
+
+        .booking-status-badge {
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .booking-id {
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: #e2e8f0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+
+        .guest-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #2d4a6f 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .guest-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .price-tag {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f1f5f9;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .date-range i {
+            color: var(--color-primary);
+        }
+
+        @@media (max-width: 992px) {
+            .booking-info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .booking-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .filter-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.6rem 1.25rem;
+            font-weight: 500;
+            min-width: 180px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-select:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        .booking-count {
+            background: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .toast-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .toast-error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .toast-notification::before {
+            font-size: 1.25rem;
+        }
+
+        .toast-success::before {
+            content: '✓';
+        }
+
+        .toast-error::before {
+            content: '✕';
+        }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            background: white;
+            padding: var(--spacing-xl);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-primary) 100%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-accent) 0%, #c9a227 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 16px;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .quick-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .quick-stat i {
+            color: var(--color-primary);
         }
     </style>
 </head>
 
 <body>
+    @Html.AntiForgeryToken()
     <div style="background: var(--color-primary); color: white; padding: var(--spacing-lg) 0;">
         <div class="container">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -166,7 +527,6 @@
             </div>
         </div>
     </div>
-
     <main class="py-8">
         <div class="container">
             <div class="admin-container">
@@ -258,41 +618,113 @@
                     </div>
 
                     <div id="bookingsSection" class="admin-section">
-                        <h2 class="text-primary mb-6">All Bookings</h2>
-
-                        <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-lg);">
-                            <select id="bookingFilter" class="form-select" style="max-width: 200px;" onchange="filterBookingsTable()">
-                                <option value="all">All Bookings</option>
-                                <option value="Confirmed">Confirmed</option>
-                                <option value="Cancelled">Cancelled</option>
-                                <option value="Pending">Pending</option>
-                            </select>
-                            <span class="text-gray">@Model.AllBookings.Count() bookings</span>
+                        <div class="section-header">
+                            <div>
+                                <h2 class="text-primary mb-2" style="margin-bottom: 0.25rem;">📋 Booking Management</h2>
+                                <p class="text-gray" style="margin: 0;">Manage and track all customer bookings</p>
+                            </div>
+                            <div class="filter-group">
+                                <select id="bookingFilter" class="filter-select" onchange="filterBookingsTable()">
+                                    <option value="all">🔍 All Bookings</option>
+                                    <option value="Pending">⏳ Pending</option>
+                                    <option value="Confirmed">✅ Confirmed</option>
+                                    <option value="Completed">✔️ Completed</option>
+                                    <option value="Cancelled">❌ Cancelled</option>
+                                </select>
+                                <span class="booking-count">@Model.AllBookings.Count() Total</span>
+                            </div>
                         </div>
 
                         <div id="allBookingsList">
+                            @if (!Model.AllBookings.Any())
+                            {
+                                <div class="text-center py-5">
+                                    <div style="font-size: 4rem; margin-bottom: 1rem;">📭</div>
+                                    <h4 class="text-gray">No bookings found</h4>
+                                    <p class="text-gray">Bookings will appear here once customers make reservations</p>
+                                </div>
+                            }
                             @foreach (var booking in Model.AllBookings)
                             {
                                 var status = booking.PaymentStatus ?? "Pending";
-                                <div class="card mb-3 booking-row" data-status="@status">
-                                    <div class="card-content">
-                                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: var(--spacing-lg); align-items: center;">
-                                            <div>
-                                                <p style="font-weight: 600;">@booking.User.FullName</p>
-                                                <p class="text-gray small">@booking.User.Email</p>
+                                var badgeClass = status == "Confirmed" ? "badge-success" : 
+                                                 status == "Cancelled" ? "badge-error" : 
+                                                 status == "Completed" ? "badge-completed" : "badge-warning";
+                                var nights = (booking.CheckOut - booking.CheckIn).Days;
+                                var initials = string.Join("", booking.User.FullName.Split(' ').Take(2).Select(n => n[0].ToString().ToUpper()));
+                                
+                                <div class="booking-card booking-row" data-status="@status" data-booking-id="@booking.Id">
+                                    <div class="booking-card-header">
+                                        <span class="booking-id">#BK-@booking.Id.ToString("D5")</span>
+                                        <span class="@badgeClass booking-status-badge">@status</span>
+                                    </div>
+                                    <div class="booking-card-body">
+                                        <div class="booking-info-grid">
+                                            <div class="booking-info-item">
+                                                <span class="booking-info-label">Guest</span>
+                                                <div class="guest-info">
+                                                    <div class="guest-avatar">@initials</div>
+                                                    <div>
+                                                        <div class="booking-info-value">@booking.User.FullName</div>
+                                                        <div class="booking-info-sub">@booking.User.Email</div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p style="font-weight: 600;">@booking.Room.Name</p>
-                                                <p class="text-gray small">@booking.CheckIn.ToShortDateString() - @booking.CheckOut.ToShortDateString()</p>
+                                            <div class="booking-info-item">
+                                                <span class="booking-info-label">Room Details</span>
+                                                <div class="booking-info-value">@booking.Room.Name</div>
+                                                <div class="booking-info-sub">👥 @booking.NumberOfGuests guest(s) • @nights night(s)</div>
                                             </div>
-                                            <div>
-                                                <p style="font-weight: 600;">@booking.TotalPrice.ToString("C0")</p>
-                                                <p class="text-gray small">@booking.NumberOfGuests guest(s)</p>
+                                            <div class="booking-info-item">
+                                                <span class="booking-info-label">Duration</span>
+                                                <div class="date-range">
+                                                    <span>📅 @booking.CheckIn.ToString("MMM dd")</span>
+                                                    <span>→</span>
+                                                    <span>@booking.CheckOut.ToString("MMM dd, yyyy")</span>
+                                                </div>
                                             </div>
-                                            @{
-                                                var badgeClass = status == "Confirmed" ? "badge-success" : (status == "Cancelled" ? "badge-error" : "badge-warning");
-                                            }
-                                            <span class="@badgeClass">@status</span>
+                                            <div class="booking-info-item" style="align-items: flex-end;">
+                                                <span class="booking-info-label">Total Amount</span>
+                                                <div class="price-tag">💰 @booking.TotalPrice.ToString("C0")</div>
+                                                <div style="margin-top: 0.75rem;">
+                                                    <select class="status-select" 
+                                                            data-booking-id="@booking.Id" 
+                                                            onchange="updateBookingStatus(this)">
+                                                        @if (status == "Pending")
+                                                        {
+                                                            <option value="Pending" selected>⏳ Pending</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="Pending">⏳ Pending</option>
+                                                        }
+                                                        @if (status == "Confirmed")
+                                                        {
+                                                            <option value="Confirmed" selected>✅ Confirmed</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="Confirmed">✅ Confirmed</option>
+                                                        }
+                                                        @if (status == "Completed")
+                                                        {
+                                                            <option value="Completed" selected>✔️ Completed</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="Completed">✔️ Completed</option>
+                                                        }
+                                                        @if (status == "Cancelled")
+                                                        {
+                                                            <option value="Cancelled" selected>❌ Cancelled</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="Cancelled">❌ Cancelled</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -349,15 +781,78 @@
         function filterBookingsTable() {
             const filter = document.getElementById('bookingFilter').value;
             const rows = document.querySelectorAll('.booking-row');
+            let visibleCount = 0;
 
             rows.forEach(row => {
                 const status = row.getAttribute('data-status');
                 if (filter === 'all' || status === filter) {
                     row.style.display = 'block';
+                    row.style.animation = 'fadeIn 0.3s ease-out';
+                    visibleCount++;
                 } else {
                     row.style.display = 'none';
                 }
             });
+
+            const countSpan = document.querySelector('.booking-count');
+            if (countSpan) {
+                countSpan.textContent = visibleCount + ' ' + (filter === 'all' ? 'Total' : filter);
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast-notification toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        async function updateBookingStatus(selectElement) {
+            const bookingId = selectElement.dataset.bookingId;
+            const newStatus = selectElement.value;
+            const row = selectElement.closest('.booking-row');
+            const badge = row.querySelector('.booking-status-badge');
+
+            try {
+                const response = await fetch('/Admin/UpdateBookingStatus', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify({ bookingId: parseInt(bookingId), status: newStatus })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    badge.textContent = newStatus;
+                    badge.className = 'booking-status-badge ' + getBadgeClass(newStatus);
+                    row.setAttribute('data-status', newStatus);
+                    showToast(`Booking status updated to ${newStatus}`, 'success');
+                } else {
+                    showToast(result.message || 'Failed to update status', 'error');
+                    selectElement.value = row.getAttribute('data-status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('An error occurred while updating status', 'error');
+                selectElement.value = row.getAttribute('data-status');
+            }
+        }
+
+        function getBadgeClass(status) {
+            switch (status) {
+                case 'Confirmed': return 'badge-success';
+                case 'Cancelled': return 'badge-error';
+                case 'Completed': return 'badge-completed';
+                default: return 'badge-warning';
+            }
         }
     </script>
 </body>
