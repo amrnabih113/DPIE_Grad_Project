@@ -1,4 +1,3 @@
-
 using Bookify.Repository;
 using Bookify.services;
 using Bookify.services.IServices;
@@ -71,12 +70,38 @@ namespace Bookify
 
             var app = builder.Build();
 
+            // Ensure database is created and migrated before seeding
             using (var scope = app.Services.CreateScope())
             {
-                await IdentitySeeder.SeedRolesAsync(scope.ServiceProvider);
-                await IdentitySeeder.SeedAdminAccount(scope.ServiceProvider);
-            }
+                try
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    
+                    // Ensure database is created
+                    await context.Database.EnsureCreatedAsync();
+                    
+                    // Apply any pending migrations
+                    await context.Database.MigrateAsync();
+                    
+                    // Seed identity data
+                    await IdentitySeeder.SeedRolesAsync(scope.ServiceProvider);
+                    await IdentitySeeder.SeedAdminAccount(scope.ServiceProvider);
 
+                    // Seed all application data
+                    await IdentitySeeder.SeedAllDataAsync(scope.ServiceProvider);
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while creating/migrating the database or seeding data.");
+                    
+                    // Log more specific details about the error
+                    if (ex is Microsoft.EntityFrameworkCore.Storage.RetryLimitExceededException retryEx)
+                    {
+                        logger.LogError("Database retry limit exceeded. Check your database connection string and ensure SQL Server is running. Inner exception: {InnerException}", retryEx.InnerException?.Message);
+                    }
+                }
+            }
 
             if (!app.Environment.IsDevelopment())
             {

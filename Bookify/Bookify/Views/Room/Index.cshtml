@@ -66,12 +66,12 @@
                     <div class="filter-group">
                         <h3 class="filter-title">Guests</h3>
                         <select name="maxGuests" id="guests" class="form-select" onchange="applyFilters(1)">
-                            <!option value="" @(!Model.NumberOfGeusts.HasValue ? "selected" : "")>Any</!option>
-                            <!option value="1" @(Model.NumberOfGeusts == 1 ? "selected" : "")>1 Guest</!option>
-                            <!option value="2" @(Model.NumberOfGeusts == 2 ? "selected" : "")>2 Guests</!option>
-                            <!option value="3" @(Model.NumberOfGeusts == 3 ? "selected" : "")>3 Guests</!option>
-                            <!option value="4" @(Model.NumberOfGeusts == 4 ? "selected" : "")>4 Guests</!option>
-                            <!option value="5" @(Model.NumberOfGeusts >= 5 ? "selected" : "")>5+ Guests</!option>
+                            <option value="">Any</option>
+                            <option value="1">1 Guest</option>
+                            <option value="2">2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5">5+ Guests</option>
                         </select>
                     </div>
 

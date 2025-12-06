@@ -249,6 +249,33 @@ namespace Bookify.Controllers
             return Json(reviews);
         }
 
+       
+
+        // Public debug endpoint to check room data
+        [HttpGet]
+        public async Task<IActionResult> CheckRoomData()
+        {
+            try
+            {
+                var rooms = await _roomService.AllForCards();
+                var result = rooms.Take(5).Select(r => new {
+                    Id = r.Id,
+                    Name = r.Name,
+                    ImageUrl = r.ImageUrl,
+                    Description = r.Description?.Substring(0, Math.Min(50, r.Description?.Length ?? 0)) + "...",
+                    AmenityCount = r.Amenities?.Count() ?? 0,
+                    HasImage = !string.IsNullOrEmpty(r.ImageUrl)
+                }).ToList();
+                
+                return Json(new { success = true, data = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+      
         private async Task PopulateDropdowns(AddRoomViewModel model)
         {
             var types = await _roomTypeService.GetAllAsync();

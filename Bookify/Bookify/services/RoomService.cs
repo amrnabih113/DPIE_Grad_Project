@@ -172,8 +172,8 @@ namespace Bookify.services
             return new RoomDetailsViewModel
             {
                 Id = room.Id,
-                Name = room.Name ?? "",
-                Description = room.Description ?? "",
+                Name = room.Name ?? $"Room {room.RoomNumber}",
+                Description = room.Description ?? "Comfortable and well-appointed room with modern amenities.",
                 NumberOfGusts = room.MaxGuests,
                 Area = (int)room.Area,
                 IsFavorite = userId != null && await _favoriteService.IsFavoriteAsync(userId, room.Id),
@@ -197,7 +197,7 @@ namespace Bookify.services
                 .Select(r => new TopRoomViewModel
                 {
                     Id = r.Id,
-                    Name = r.Name,
+                    Name = r.Name ?? $"Room {r.RoomNumber}",
                     PricePerNight = (int)r.PriceForNight,
                     Rating = CalculateRating(r.Reviews),
                     FirstImageUrl = r.RoomImages != null && r.RoomImages.Any() ? r.RoomImages.First().ImageUrl : ""
@@ -239,6 +239,22 @@ namespace Bookify.services
         {
             return await _roomRepository.GetAllIncludingAsync(r => r.RoomType, r => r.RoomImages);
         }
+
+        // Debug method to check room images
+        public async Task<object> GetRoomImagesDebugInfoAsync()
+        {
+            var rooms = await _roomRepository.GetAllWithReviewsAsync();
+            return rooms.Select(r => new 
+            {
+                RoomId = r.Id,
+                RoomNumber = r.RoomNumber,
+                RoomName = r.Name,
+                ImageCount = r.RoomImages?.Count ?? 0,
+                Images = r.RoomImages?.Select(img => img.ImageUrl).ToList() ?? new List<string>(),
+                FirstImageUrl = r.RoomImages?.FirstOrDefault()?.ImageUrl ?? "No images"
+            }).ToList();
+        }
+
         // Some helper Methods
         private decimal CalculateFinalPrice(decimal price, bool hasDiscount, int? discountPercent)
         {
@@ -271,10 +287,10 @@ namespace Bookify.services
                 cardList.Add(new RoomCardViewModel
                 {
                     Id = room.Id,
-                    Name = room.Name,
+                    Name = room.Name ?? $"Room {room.RoomNumber}",
                     Rating = CalculateRating(room.Reviews),
                     NumberOfReviews = room.Reviews?.Count() ?? 0,
-                    Description = room.Description,
+                    Description = room.Description ?? "Comfortable and well-appointed room",
                     NumberOfGusts = room.MaxGuests,
                     Area = (int)room.Area,
                     DiscountPercentage = room.HasDiscount ? room.DiscountPercent : null,
