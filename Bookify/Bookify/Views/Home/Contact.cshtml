@@ -1,0 +1,506 @@
+@{
+    ViewData["Title"] = "Contact Us - Bookify";
+    ViewData["Description"] = "Contact Bookify for inquiries and support";
+}
+
+<style>
+    :root {
+        --color-primary: #1e3a5f;
+        --color-secondary: #2a5a8f;
+        --color-accent: #d4af37;
+        --color-gray-50: #f9fafb;
+        --color-gray-100: #f3f4f6;
+        --color-gray-200: #e5e7eb;
+        --color-gray-300: #d1d5db;
+        --color-gray-400: #9ca3af;
+        --color-gray-500: #6b7280;
+        --color-gray-600: #4b5563;
+        --color-gray-700: #374151;
+        --color-gray-800: #1f2937;
+        --color-gray-900: #111827;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .contact-hero {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        color: white;
+        padding: 4rem 0 5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="1000,100 1000,0 0,100"/></svg>');
+        background-size: cover;
+        pointer-events: none;
+    }
+
+    .contact-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-hero p {
+        font-size: 1.25rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .contact-main {
+        background: var(--color-gray-50);
+        padding: 5rem 0;
+        margin-top: -2rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-card {
+        background: white;
+        border-radius: 1.5rem;
+        box-shadow: var(--shadow-xl);
+        border: none;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .contact-card .card-body {
+        padding: 2.5rem;
+    }
+
+    .contact-card h4 {
+        color: var(--color-primary);
+        font-weight: 600;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .contact-card h4::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 3rem;
+        height: 3px;
+        background: var(--color-accent);
+        border-radius: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--color-gray-700);
+        font-size: 0.95rem;
+    }
+
+    .form-control, .form-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--color-gray-200);
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-control:focus, .form-select:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .form-control:hover, .form-select:hover {
+        border-color: var(--color-gray-300);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 1rem 2rem;
+        border-radius: 0.75rem;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .contact-info-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: var(--color-gray-50);
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .contact-info-item:hover {
+        background: white;
+        box-shadow: var(--shadow-md);
+        transform: translateX(5px);
+    }
+
+    .contact-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        color: white;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: var(--shadow-md);
+    }
+
+    .contact-info-text h5 {
+        color: var(--color-primary);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-info-text p {
+        color: var(--color-gray-600);
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .business-hours {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        color: white;
+        border-radius: 1.5rem;
+        padding: 2rem;
+    }
+
+    .business-hours h4 {
+        color: white;
+        margin-bottom: 1.5rem;
+    }
+
+    .business-hours h4::after {
+        background: var(--color-accent);
+    }
+
+    .hours-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hours-item:last-child {
+        border-bottom: none;
+    }
+
+    .hours-item span:first-child {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hours-item span:last-child {
+        font-weight: 600;
+        color: white;
+    }
+
+    .alert {
+        border: none;
+        border-radius: 0.75rem;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+
+    .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .alert .btn-close {
+        filter: brightness(0) invert(1);
+    }
+</style>
+
+<div class="contact-hero">
+    <div class="container">
+        <div class="text-center">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you. Get in touch with our team and let us help make your stay unforgettable.</p>
+        </div>
+    </div>
+</div>
+
+<div class="contact-main">
+    <div class="container" style="max-width: 1200px;">
+        <div class="row g-5">
+            <!-- Contact Form -->
+            <div class="col-lg-7">
+                <div class="contact-card">
+                    <div class="card-body">
+                        <h4><i class="fas fa-paper-plane me-2"></i>Send us a Message</h4>
+
+                        <div id="alertPlaceholder"></div>
+
+                        <form asp-action="SubmitContact" asp-controller="Home" method="post" id="contactForm" novalidate>
+                            <input name="__RequestVerificationToken" type="hidden" value="@Html.AntiForgeryToken().ToString()" />
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Name *</label>
+                                        <input type="text" name="name" id="name" class="form-control" required>
+                                        <div class="invalid-feedback">Name is required.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Email *</label>
+                                        <input type="email" name="email" id="email" class="form-control" required>
+                                        <div class="invalid-feedback">Valid email is required.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Phone</label>
+                                        <input type="tel" name="phone" id="phone" class="form-control">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Subject *</label>
+                                        <select name="subject" id="subject" class="form-select" required>
+                                            <option value="">Select a subject</option>
+                                            <option value="Booking Inquiry">Booking Inquiry</option>
+                                            <option value="Customer Support">Customer Support</option>
+                                            <option value="Feedback">Feedback</option>
+                                            <option value="Partnership">Partnership</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please choose a subject.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Message *</label>
+                                <textarea name="message" id="message" class="form-control" rows="6" required placeholder="How can we help you make your stay perfect?"></textarea>
+                                <div class="invalid-feedback">Message is required.</div>
+                            </div>
+
+                            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="col-lg-5">
+                <div class="contact-card mb-4">
+                    <div class="card-body">
+                        <h4><i class="fas fa-map-marker-alt me-2"></i>Get in Touch</h4>
+
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-info-text">
+                                <h5>Email Us</h5>
+                                <p>info@bookify.com</p>
+                                <p>support@bookify.com</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-info-text">
+                                <h5>Call Us</h5>
+                                <p>+1 (555) 123-4567</p>
+                                <p>+1 (555) 765-4321</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-info-text">
+                                <h5>Visit Us</h5>
+                                <p>123 Luxury Avenue</p>
+                                <p>Paradise City, PC 12345</p>
+                                <p>United States</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="business-hours">
+                    <h4><i class="fas fa-clock me-2"></i>Business Hours</h4>
+                    <div class="hours-item">
+                        <span>Monday - Friday</span>
+                        <span>9:00 AM - 8:00 PM</span>
+                    </div>
+                    <div class="hours-item">
+                        <span>Saturday</span>
+                        <span>10:00 AM - 6:00 PM</span>
+                    </div>
+                    <div class="hours-item">
+                        <span>Sunday</span>
+                        <span>Closed</span>
+                    </div>
+                    <div class="text-center mt-3" style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Emergency support available 24/7
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function showAlert(type, message) {
+        const alertPlaceholder = document.getElementById('alertPlaceholder');
+        alertPlaceholder.innerHTML = 
+            '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                '<i class="fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle') + ' me-2"></i>' +
+                message +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert" style="filter: brightness(0) invert(1);"></button>' +
+            '</div>';
+        
+        // Auto dismiss after 5 seconds
+        setTimeout(function() {
+            const alert = alertPlaceholder.querySelector('.alert');
+            if (alert) {
+                alert.remove();
+            }
+        }, 5000);
+    }
+
+    function isValidEmail(email) {
+        // Escape the regex pattern to avoid Razor conflicts
+        var emailRegex = new RegExp('^[^\\s@@]+@@[^\\s@@]+\\.[^\\s@@]+$');
+        return emailRegex.test(email);
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        // Client-side validation
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+            showAlert('danger', "Please fill in all required fields correctly.");
+            return;
+        }
+
+        const email = formData.get('email');
+        if (!isValidEmail(email)) {
+            showAlert('danger', "Please enter a valid email address.");
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Sending...';
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert('success', result.message);
+                form.reset();
+                form.classList.remove('was-validated');
+            } else {
+                showAlert('danger', result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('danger', "An error occurred while sending your message. Please try again.");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalContent;
+        }
+    });
+
+    // Add animation on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.contact-info-item').forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(item);
+        });
+    });
+</script>
+}

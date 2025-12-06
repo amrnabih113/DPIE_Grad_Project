@@ -1,4 +1,7 @@
-﻿namespace Bookify.Data
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace Bookify.Data
 {
     public class IdentitySeeder
     {
