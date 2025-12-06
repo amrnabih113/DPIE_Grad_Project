@@ -7,6 +7,6 @@
         public int PricePerNight { get; set; }
         public double Rating { get; set; }
         public string FirstImageUrl { get; set; } = string.Empty;
-
+        public string? BookingStatus { get; set; }
     }
 }

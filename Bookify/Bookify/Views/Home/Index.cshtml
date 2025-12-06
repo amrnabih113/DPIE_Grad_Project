@@ -228,14 +228,19 @@
                     }
 
                     container.innerHTML = data.map(room => `
-                                <div class="card fade-in">
+                                <div class="card fade-in" style="position: relative;">
+                                  ${room.bookingStatus ? `
+                                    <div style="position: absolute; top: 1rem; right: 1rem; z-index: 10; background: ${room.bookingStatus === 'Pending' ? 'rgba(251, 191, 36, 0.95)' : 'rgba(239, 68, 68, 0.95)'}; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                      ${room.bookingStatus === 'Pending' ? '⏳ Pending' : '🔒 Booked'}
+                                    </div>
+                                  ` : ''}
                                   <img src="${room.firstImageUrl}" alt="${room.name}" class="card-image" onerror="this.src='https://via.placeholder.com/600x400/1E3A5F/D4AF37?text=${encodeURIComponent(room.name)}'">
                                   <div class="card-content">
                                     <h3 class="text-primary mb-2">${room.name}</h3>
                                     ${createStarRating(room.rating)}
                                     <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: var(--spacing-md);">
                                       <div>
-                                        <span style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--color-primary);">$${room.pricePerNight}</span>
+                                        <span style="font-size: var(--font-size-3xl); font-weight: var-weight-bold); color: var(--color-primary);">$${room.pricePerNight}</span>
                                         <span style="color: var(--color-gray-500); font-size: var(--font-size-sm);"> / night</span>
                                       </div>
                                       <a href="/Room/Details/${room.id}" class="btn btn-primary">View Details</a>

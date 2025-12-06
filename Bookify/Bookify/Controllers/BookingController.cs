@@ -79,7 +79,7 @@ namespace Bookify.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                if (booking.CheckIn <= DateTime.Now)
+                if (booking.CheckIn.Date < DateTime.Today)
                 {
                     TempData["ErrorMessage"] = "Cannot cancel a booking that has already started or is in the past.";
                     return RedirectToAction(nameof(Index));
@@ -271,9 +271,9 @@ namespace Bookify.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,RoomId,CheckIn,CheckOut,NumberOfGuests,TotalPrice,PaymentStatus,PaymentMethod,PaymentDate,CreatedAt")] Booking booking)
+        public async Task<IActionResult> Edit(int id, DateTime CheckIn, DateTime CheckOut, int NumberOfGuests)
         {
-            if (id != booking.Id)
+            if (id <= 0)
                 return NotFound();
 
             try
@@ -281,22 +281,66 @@ namespace Bookify.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 var existingBooking = await _bookingService.GetByIdAsync(id);
 
+                if (existingBooking == null)
+                    return NotFound();
+
                 if (existingBooking.UserId != user.Id && !User.IsInRole("Admin"))
                     return Forbid();
 
-                if (ModelState.IsValid)
+                if (existingBooking.PaymentStatus != "Pending")
                 {
-                    await _bookingService.UpdateBookingAsync(booking);
-                    return RedirectToAction(nameof(Details), new { id = booking.Id });
+                    TempData["ErrorMessage"] = "Only pending bookings can be edited.";
+                    return RedirectToAction(nameof(Index));
                 }
 
-                return View(booking);
+                if (existingBooking.CheckIn.Date < DateTime.Today)
+                {
+                    TempData["ErrorMessage"] = "Cannot edit a booking that has already started.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                if (CheckOut <= CheckIn)
+                {
+                    ModelState.AddModelError("CheckOut", "Check-out date must be after check-in date");
+                    return View(existingBooking);
+                }
+
+                if (CheckIn < DateTime.Today)
+                {
+                    ModelState.AddModelError("CheckIn", "Check-in date cannot be in the past");
+                    return View(existingBooking);
+                }
+
+                var isAvailable = await _bookingService.CheckRoomAvailabilityAsync(
+                    existingBooking.RoomId,
+                    CheckIn,
+                    CheckOut,
+                    id);
+
+                if (!isAvailable)
+                {
+                    TempData["ErrorMessage"] = "Room is not available for the selected dates.";
+                    return View(existingBooking);
+                }
+
+                existingBooking.CheckIn = CheckIn;
+                existingBooking.CheckOut = CheckOut;
+                existingBooking.NumberOfGuests = NumberOfGuests;
+                
+                var room = await _roomService.GetByIdAsync(existingBooking.RoomId);
+                var nights = (CheckOut - CheckIn).Days;
+                existingBooking.TotalPrice = room.PriceForNight * nights;
+
+                await _bookingService.UpdateBookingAsync(existingBooking);
+                
+                TempData["SuccessMessage"] = "Booking updated successfully!";
+                return RedirectToAction(nameof(Details), new { id = existingBooking.Id });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating booking");
-                ModelState.AddModelError("", "An error occurred while updating the booking.");
-                return View(booking);
+                TempData["ErrorMessage"] = "An error occurred while updating the booking.";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -336,12 +380,15 @@ namespace Bookify.Controllers
                     return Forbid();
 
                 await _bookingService.DeleteBookingAsync(id);
+                
+                TempData["SuccessMessage"] = "Booking deleted successfully!";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting booking");
-                return BadRequest("An error occurred while deleting the booking.");
+                TempData["ErrorMessage"] = "An error occurred while deleting the booking.";
+                return RedirectToAction(nameof(Index));
             }
         }
 

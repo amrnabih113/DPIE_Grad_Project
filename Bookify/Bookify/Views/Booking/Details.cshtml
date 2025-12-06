@@ -15,6 +15,27 @@
 }
 
 <style>
+    .alert {
+        padding: var(--spacing-md) var(--spacing-lg);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-lg);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    .alert-success {
+        background: #DEF7EC;
+        color: #03543F;
+        border: 1px solid #84E1BC;
+    }
+
+    .alert-error {
+        background: #FDE8E8;
+        color: #9B1C1C;
+        border: 1px solid #F98080;
+    }
+
     .details-container {
         display: grid;
         grid-template-columns: 1fr 400px;
@@ -139,9 +160,17 @@
 
         @if (TempData["SuccessMessage"] != null)
         {
-            <div class="alert alert-success mb-4" style="background: #DEF7EC; color: #03543F; padding: var(--spacing-lg); border-radius: var(--radius-md); display: flex; align-items: center; gap: var(--spacing-md);">
+            <div class="alert alert-success">
                 <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
                 <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle" style="font-size: 1.5rem;"></i>
+                <span>@TempData["ErrorMessage"]</span>
             </div>
         }
 
@@ -153,22 +182,38 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <h2 style="margin-bottom: var(--spacing-xs);">Booking #@Model.Id</h2>
-                                <p style="opacity: 0.9;">Booked on @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+                                <p style="opacity: 0.9;">@(Model.PaymentStatus?.ToLower() == "pending" ? "Submitted on" : "Booked on") @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
                             </div>
                             <span class="status-badge @statusClass">@(Model.PaymentStatus ?? "Pending")</span>
                         </div>
                     </div>
 
                     <div class="details-content">
-                        <h3 class="text-primary mb-4">Stay Details</h3>
+                        @if (Model.PaymentStatus?.ToLower() == "pending")
+                        {
+                            <div style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); padding: var(--spacing-lg); border-radius: var(--radius-lg); margin-bottom: var(--spacing-xl); border: 2px solid #FBBF24;">
+                                <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+                                    <svg width="24" height="24" viewBox="0 0 20 20" fill="#D97706">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                                    </svg>
+                                    <h4 style="margin: 0; color: #92400E; font-weight: 600;">Booking Request Pending Approval</h4>
+                                </div>
+                                <p style="color: #78350F; margin: 0; font-size: var(--font-size-sm); line-height: 1.5;">
+                                    Your booking request has been submitted successfully and is currently awaiting admin approval. 
+                                    You will receive a notification once the admin reviews your request. The reservation dates you selected will be held until the admin makes a decision.
+                                </p>
+                            </div>
+                        }
+
+                        <h3 class="text-primary mb-4">@(Model.PaymentStatus?.ToLower() == "pending" ? "Requested" : "Stay") Details</h3>
 
                         <div class="detail-row">
-                            <span class="detail-label"><i class="fas fa-calendar-check"></i> Check-in</span>
+                            <span class="detail-label"><i class="fas fa-calendar-check"></i> @(Model.PaymentStatus?.ToLower() == "pending" ? "Requested Check-in" : "Check-in")</span>
                             <span class="detail-value">@Model.CheckIn.ToString("dddd, MMMM dd, yyyy")</span>
                         </div>
 
                         <div class="detail-row">
-                            <span class="detail-label"><i class="fas fa-calendar-times"></i> Check-out</span>
+                            <span class="detail-label"><i class="fas fa-calendar-times"></i> @(Model.PaymentStatus?.ToLower() == "pending" ? "Requested Check-out" : "Check-out")</span>
                             <span class="detail-value">@Model.CheckOut.ToString("dddd, MMMM dd, yyyy")</span>
                         </div>
 
@@ -206,15 +251,18 @@
                         }
 
                         <div class="action-buttons">
-                            @if (Model.PaymentStatus?.ToLower() != "cancelled" && Model.CheckIn > DateTime.Now)
+                            @if (Model.PaymentStatus?.ToLower() == "pending" && Model.CheckIn.Date >= DateTime.Today)
                             {
                                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline">
-                                    <i class="fas fa-edit"></i> Modify Booking
+                                    <i class="fas fa-edit"></i> Modify Request
                                 </a>
-                                <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-danger"
-                                   onclick="return confirm('Are you sure you want to cancel this booking?');">
-                                    <i class="fas fa-times"></i> Cancel Booking
-                                </a>
+                                <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" style="display: inline;"
+                                   onsubmit="return confirm('Are you sure you want to cancel this booking request?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-times"></i> Cancel Request
+                                    </button>
+                                </form>
                             }
                             <button onclick="window.print();" class="btn btn-outline">
                                 <i class="fas fa-print"></i> Print

@@ -75,11 +75,53 @@ namespace Bookify.Controllers
                     return Json(new { success = false, message = ex.Message });
                 }
             }
+
+            [HttpPost]
+            public async Task<IActionResult> DeleteBooking([FromBody] DeleteBookingRequest request)
+            {
+                try
+                {
+                    if (request == null || request.BookingId <= 0)
+                    {
+                        return Json(new { success = false, message = "Invalid request" });
+                    }
+
+                    var booking = await _bookingService.GetByIdAsync(request.BookingId);
+                    if (booking == null)
+                    {
+                        return Json(new { success = false, message = "Booking not found" });
+                    }
+
+                    if (booking.PaymentStatus != "Cancelled")
+                    {
+                        return Json(new { success = false, message = "Only cancelled bookings can be deleted" });
+                    }
+
+                    var deleted = await _bookingService.DeleteBookingAsync(request.BookingId);
+                    if (deleted)
+                    {
+                        return Json(new { success = true, message = "Booking deleted successfully" });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Failed to delete booking" });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
+            }
         }
 
         public class UpdateBookingStatusRequest
         {
             public int BookingId { get; set; }
             public string Status { get; set; } = string.Empty;
+        }
+
+        public class DeleteBookingRequest
+        {
+            public int BookingId { get; set; }
         }
 }

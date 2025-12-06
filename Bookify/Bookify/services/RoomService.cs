@@ -22,13 +22,15 @@ namespace Bookify.services
         private readonly IFavoriteService _favoriteService;
         private readonly IWebHostEnvironment _env;
         private readonly IGenericRepository<RoomType> _roomTypesRepo;
+        private readonly IGenericRepository<Booking> _bookingRepository;
 
         public RoomService(IRoomRepository roomRepository,
                            IAmenityService amenityService,
                            IHttpContextAccessor httpContextAccessor,
                            IFavoriteService favoriteService,
                            IWebHostEnvironment env,
-                           IGenericRepository<RoomType> roomTypesRepo)
+                           IGenericRepository<RoomType> roomTypesRepo,
+                           IGenericRepository<Booking> bookingRepository)
         {
             _roomRepository = roomRepository;
             _amenityService = amenityService;
@@ -36,6 +38,7 @@ namespace Bookify.services
             _favoriteService = favoriteService;
             _env = env;
             _roomTypesRepo = roomTypesRepo;
+            _bookingRepository = bookingRepository;
         }
 
         public async Task<IEnumerable<Room>> GetAllAsync() => await _roomRepository.GetAllAsync();
@@ -169,6 +172,20 @@ namespace Bookify.services
             if (room == null) throw new Exception($"Room with id {id} not found.");
             var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            var currentDate = DateTime.Now.Date;
+            var allBookings = await _bookingRepository.GetAllAsync();
+            var activeBooking = allBookings
+                .Where(b => b.RoomId == id &&
+                            b.CheckOut.Date > currentDate &&
+                            (b.PaymentStatus == "Pending" || b.PaymentStatus == "Confirmed"))
+                .OrderBy(b => b.CheckIn)
+                .FirstOrDefault();
+
+            bool isBooked = activeBooking != null;
+            DateTime? checkIn = activeBooking?.CheckIn;
+            DateTime? checkOut = activeBooking?.CheckOut;
+            int? daysUntilAvailable = checkOut.HasValue ? (checkOut.Value.Date - currentDate).Days : null;
+
             return new RoomDetailsViewModel
             {
                 Id = room.Id,
@@ -183,24 +200,40 @@ namespace Bookify.services
                 Rating = CalculateRating(room.Reviews),
                 NumberOfReviews = room.Reviews?.Count ?? 0,
                 Amenities = await _amenityService.GetAmenitiesForRoomAsync(room.Id) ?? new List<Amenity>(),
-                RoomImages = GetRoomImagesWithFallback(room.RoomImages, room.Id)
+                RoomImages = GetRoomImagesWithFallback(room.RoomImages, room.Id),
+                IsBooked = isBooked,
+                BookingCheckIn = checkIn,
+                BookingCheckOut = checkOut,
+                DaysUntilAvailable = daysUntilAvailable
             };
         }
 
         public async Task<IEnumerable<TopRoomViewModel>> GetTopRatedRoomsAsync(int top = 3)
         {
             var rooms = await _roomRepository.GetAllWithReviewsAsync();
+            var allBookings = await _bookingRepository.GetAllAsync();
+            var currentDate = DateTime.Now.Date;
 
             return rooms
                 .OrderByDescending(r => CalculateRating(r.Reviews))
                 .Take(top)
-                .Select(r => new TopRoomViewModel
-                {
-                    Id = r.Id,
-                    Name = r.Name ?? $"Room {r.RoomNumber}",
-                    PricePerNight = (int)r.PriceForNight,
-                    Rating = CalculateRating(r.Reviews),
-                    FirstImageUrl = GetFirstImageUrlWithFallback(r.RoomImages, r.Id)
+                .Select(r => {
+                    var activeBooking = allBookings
+                        .Where(b => b.RoomId == r.Id && 
+                                    b.CheckOut.Date > currentDate &&
+                                    (b.PaymentStatus == "Pending" || b.PaymentStatus == "Confirmed"))
+                        .OrderBy(b => b.CheckIn)
+                        .FirstOrDefault();
+
+                    return new TopRoomViewModel
+                    {
+                        Id = r.Id,
+                        Name = r.Name ?? $"Room {r.RoomNumber}",
+                        PricePerNight = (int)r.PriceForNight,
+                        Rating = CalculateRating(r.Reviews),
+                        FirstImageUrl = GetFirstImageUrlWithFallback(r.RoomImages, r.Id),
+                        BookingStatus = activeBooking?.PaymentStatus
+                    };
                 })
                 .ToList();
         }
@@ -268,6 +301,22 @@ namespace Bookify.services
             return (int)reviews.Average(r => r.Rating);
         }
 
+        private async Task<IEnumerable<Room>> FilterAvailableRoomsAsync(IEnumerable<Room> rooms)
+        {
+            var allBookings = await _bookingRepository.GetAllAsync();
+            
+            var currentDate = DateTime.Now.Date;
+            
+            var bookedRoomIds = allBookings
+                .Where(b => (b.PaymentStatus == "Pending" || b.PaymentStatus == "Confirmed") 
+                            && b.CheckOut.Date > currentDate)
+                .Select(b => b.RoomId)
+                .Distinct()
+                .ToList();
+
+            return rooms.Where(r => !bookedRoomIds.Contains(r.Id));
+        }
+
         private async Task<List<RoomCardViewModel>> MapRoomsToCardsAsync(IEnumerable<Room> rooms)
         {
             var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -280,11 +329,20 @@ namespace Bookify.services
                 userFavoriteRoomIds = favorites.Select(f => f.RoomId).ToList();
             }
 
+            var allBookings = await _bookingRepository.GetAllAsync();
+            var currentDate = DateTime.Now.Date;
+
             foreach (var room in rooms)
             {
                 var amenities = await _amenityService.GetAmenitiesForRoomAsync(room.Id);
 
-                // Better image URL handling with multiple fallbacks
+                var activeBooking = allBookings
+                    .Where(b => b.RoomId == room.Id &&
+                                b.CheckOut.Date > currentDate &&
+                                (b.PaymentStatus == "Pending" || b.PaymentStatus == "Confirmed"))
+                    .OrderBy(b => b.CheckIn)
+                    .FirstOrDefault();
+
                 string imageUrl = "";
                 if (room.RoomImages != null && room.RoomImages.Any())
                 {
@@ -326,7 +384,8 @@ namespace Bookify.services
                     FinalPrice = CalculateFinalPrice(room.PriceForNight, room.HasDiscount, room.DiscountPercent),
                     Amenities = amenities,
                     IsFavorite = userId != null && userFavoriteRoomIds.Contains(room.Id),
-                    ImageUrl = imageUrl
+                    ImageUrl = imageUrl,
+                    BookingStatus = activeBooking?.PaymentStatus
                 });
             }
             return cardList;

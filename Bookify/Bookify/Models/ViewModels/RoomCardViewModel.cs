@@ -21,6 +21,7 @@ namespace Bookify.Models.ViewModels
         public string ImageUrl { get; set; } = default!;
 
         public IEnumerable<Amenity> Amenities { get; set; } = Enumerable.Empty<Amenity>();
+        public string? BookingStatus { get; set; }
         
     }
 }

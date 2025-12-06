@@ -95,7 +95,19 @@ namespace Bookify.services
                 b => b.RoomId == roomId &&
                      b.CheckIn < checkOut &&
                      b.CheckOut > checkIn &&
-                     b.PaymentStatus != "Cancelled");
+                     (b.PaymentStatus == "Pending" || b.PaymentStatus == "Confirmed"));
+
+            return !existingBookings.Any();
+        }
+
+        public async Task<bool> CheckRoomAvailabilityAsync(int roomId, DateTime checkIn, DateTime checkOut, int excludeBookingId)
+        {
+            var existingBookings = await _bookingRepository.FindAsync(
+                b => b.RoomId == roomId &&
+                     b.Id != excludeBookingId &&
+                     b.CheckIn < checkOut &&
+                     b.CheckOut > checkIn &&
+                     (b.PaymentStatus == "Pending" || b.PaymentStatus == "Confirmed"));
 
             return !existingBookings.Any();
         }

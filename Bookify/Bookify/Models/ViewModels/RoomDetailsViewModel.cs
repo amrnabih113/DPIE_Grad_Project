@@ -20,5 +20,11 @@
         public List<ReviewViewModel> Reviews { get; set; } = new();
         public bool CanAddReview { get; set; }
         public bool HasUserReviewed { get; set; }
+
+        // Booking status properties
+        public bool IsBooked { get; set; }
+        public DateTime? BookingCheckIn { get; set; }
+        public DateTime? BookingCheckOut { get; set; }
+        public int? DaysUntilAvailable { get; set; }
     }
 }

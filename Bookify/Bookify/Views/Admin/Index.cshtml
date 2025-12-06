@@ -270,6 +270,33 @@
             gap: 0.25rem;
         }
 
+        .btn-delete-booking {
+            background: transparent;
+            border: 2px solid #dc2626;
+            color: #dc2626;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-delete-booking:hover {
+            background: #dc2626;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-delete-booking:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .booking-id {
             font-family: 'Monaco', 'Menlo', monospace;
             background: #e2e8f0;
@@ -430,6 +457,17 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @@keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.95);
             }
         }
 
@@ -686,7 +724,7 @@
                                             <div class="booking-info-item" style="align-items: flex-end;">
                                                 <span class="booking-info-label">Total Amount</span>
                                                 <div class="price-tag">💰 @booking.TotalPrice.ToString("C0")</div>
-                                                <div style="margin-top: 0.75rem;">
+                                                <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
                                                     <select class="status-select" 
                                                             data-booking-id="@booking.Id" 
                                                             onchange="updateBookingStatus(this)">
@@ -723,6 +761,14 @@
                                                             <option value="Cancelled">❌ Cancelled</option>
                                                         }
                                                     </select>
+                                                    @if (status == "Cancelled")
+                                                    {
+                                                        <button class="btn-delete-booking" 
+                                                                data-booking-id="@booking.Id"
+                                                                onclick="deleteBooking(this)">
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -834,6 +880,21 @@
                     badge.textContent = newStatus;
                     badge.className = 'booking-status-badge ' + getBadgeClass(newStatus);
                     row.setAttribute('data-status', newStatus);
+                    
+                    const actionsContainer = selectElement.parentElement;
+                    const existingDeleteBtn = actionsContainer.querySelector('.btn-delete-booking');
+                    
+                    if (newStatus === 'Cancelled' && !existingDeleteBtn) {
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'btn-delete-booking';
+                        deleteBtn.setAttribute('data-booking-id', bookingId);
+                        deleteBtn.onclick = function() { deleteBooking(this); };
+                        deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                        actionsContainer.appendChild(deleteBtn);
+                    } else if (newStatus !== 'Cancelled' && existingDeleteBtn) {
+                        existingDeleteBtn.remove();
+                    }
+                    
                     showToast(`Booking status updated to ${newStatus}`, 'success');
                 } else {
                     showToast(result.message || 'Failed to update status', 'error');
@@ -843,6 +904,62 @@
                 console.error('Error:', error);
                 showToast('An error occurred while updating status', 'error');
                 selectElement.value = row.getAttribute('data-status');
+            }
+        }
+
+        async function deleteBooking(buttonElement) {
+            const bookingId = buttonElement.dataset.bookingId;
+            
+            if (!confirm('Are you sure you want to permanently delete this cancelled booking? This action cannot be undone.')) {
+                return;
+            }
+
+            buttonElement.disabled = true;
+            buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+
+            try {
+                const response = await fetch('/Admin/DeleteBooking', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify({ bookingId: parseInt(bookingId) })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const row = buttonElement.closest('.booking-row');
+                    row.style.animation = 'fadeOut 0.3s ease-out';
+                    setTimeout(() => {
+                        row.remove();
+                        
+                        const allBookings = document.querySelectorAll('.booking-row');
+                        if (allBookings.length === 0) {
+                            const container = document.getElementById('allBookingsList');
+                            container.innerHTML = `
+                                <div class="text-center py-5">
+                                    <div style="font-size: 4rem; margin-bottom: 1rem;">📭</div>
+                                    <h4 class="text-gray">No bookings found</h4>
+                                    <p class="text-gray">Bookings will appear here once customers make reservations</p>
+                                </div>
+                            `;
+                        }
+                        
+                        filterBookingsTable();
+                    }, 300);
+                    showToast('Booking deleted successfully', 'success');
+                } else {
+                    showToast(result.message || 'Failed to delete booking', 'error');
+                    buttonElement.disabled = false;
+                    buttonElement.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('An error occurred while deleting booking', 'error');
+                buttonElement.disabled = false;
+                buttonElement.innerHTML = '<i class="fas fa-trash"></i> Delete';
             }
         }
 

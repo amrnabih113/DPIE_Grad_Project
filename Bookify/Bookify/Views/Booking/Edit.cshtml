@@ -1,0 +1,212 @@
+@model Bookify.Data.Models.Booking
+@{
+    ViewData["Title"] = "Edit Booking";
+}
+
+<style>
+    .edit-booking-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: var(--spacing-2xl) var(--spacing-md);
+    }
+
+    .booking-edit-card {
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        padding: var(--spacing-2xl);
+    }
+
+    .form-section {
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .form-section-title {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-primary);
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-sm);
+        border-bottom: 2px solid var(--color-gray-200);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .form-group {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .form-label {
+        display: block;
+        font-weight: var(--font-weight-medium);
+        margin-bottom: var(--spacing-xs);
+        color: var(--color-gray-700);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: var(--spacing-md);
+        border: 1px solid var(--color-gray-300);
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-base);
+        transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+    }
+
+    .room-info-box {
+        background: var(--color-gray-50);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .room-info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .room-info-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: var(--spacing-md);
+        justify-content: flex-end;
+        margin-top: var(--spacing-2xl);
+        padding-top: var(--spacing-xl);
+        border-top: 1px solid var(--color-gray-200);
+    }
+
+    .alert-warning {
+        background: #FEF3C7;
+        color: #92400E;
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-lg);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    @@media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="edit-booking-container">
+    <div class="booking-edit-card">
+        <h2 class="text-primary mb-4">
+            <i class="fas fa-edit"></i> Edit Booking #@Model.Id
+        </h2>
+
+        <div class="alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>You can only edit bookings with "Pending" status before check-in date.</span>
+        </div>
+
+        <div class="room-info-box">
+            <h3 class="text-primary mb-3">Room Information</h3>
+            <div class="room-info-row">
+                <span><i class="fas fa-door-open"></i> Room:</span>
+                <strong>@(Model.Room?.Name ?? "Room #" + Model.RoomId)</strong>
+            </div>
+            <div class="room-info-row">
+                <span><i class="fas fa-tag"></i> Type:</span>
+                <strong>@(Model.Room?.RoomType?.Name ?? "Standard")</strong>
+            </div>
+            <div class="room-info-row">
+                <span><i class="fas fa-dollar-sign"></i> Price per Night:</span>
+                <strong style="color: var(--color-accent);">$@Model.Room?.PriceForNight.ToString("N2")</strong>
+            </div>
+        </div>
+
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="RoomId" />
+            <input type="hidden" asp-for="PaymentStatus" />
+            <input type="hidden" asp-for="PaymentMethod" />
+            <input type="hidden" asp-for="PaymentDate" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <input type="hidden" asp-for="TotalPrice" />
+
+            <div class="form-section">
+                <h3 class="form-section-title">Booking Dates</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label asp-for="CheckIn" class="form-label">
+                            <i class="fas fa-calendar-check"></i> Check-In Date
+                        </label>
+                        <input asp-for="CheckIn" type="date" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="CheckIn" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CheckOut" class="form-label">
+                            <i class="fas fa-calendar-times"></i> Check-Out Date
+                        </label>
+                        <input asp-for="CheckOut" type="date" class="form-control" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="CheckOut" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NumberOfGuests" class="form-label">
+                        <i class="fas fa-users"></i> Number of Guests
+                    </label>
+                    <input asp-for="NumberOfGuests" type="number" class="form-control" min="1" max="@Model.Room?.MaxGuests" />
+                    <span asp-validation-for="NumberOfGuests" class="text-danger"></span>
+                    <small class="text-gray">Maximum: @Model.Room?.MaxGuests guests</small>
+                </div>
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="action-buttons">
+                <a asp-action="Index" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Bookings
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkInInput = document.querySelector('input[name="CheckIn"]');
+            const checkOutInput = document.querySelector('input[name="CheckOut"]');
+
+            checkInInput.addEventListener('change', function() {
+                const checkInDate = new Date(this.value);
+                const minCheckOut = new Date(checkInDate);
+                minCheckOut.setDate(minCheckOut.getDate() + 1);
+                checkOutInput.min = minCheckOut.toISOString().split('T')[0];
+                
+                if (new Date(checkOutInput.value) <= checkInDate) {
+                    checkOutInput.value = minCheckOut.toISOString().split('T')[0];
+                }
+            });
+        });
+    </script>
+}

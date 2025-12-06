@@ -12,6 +12,7 @@ namespace Bookify.services.IServices
         Task<IEnumerable<Booking>> GetBookingsByUserIdAsync(string userId);
         Task<IEnumerable<Booking>> GetBookingsByRoomIdAsync(int roomId);
         Task<bool> CheckRoomAvailabilityAsync(int roomId, DateTime checkIn, DateTime checkOut);
+        Task<bool> CheckRoomAvailabilityAsync(int roomId, DateTime checkIn, DateTime checkOut, int excludeBookingId);
         Task<decimal> CalculateTotalPriceAsync(int roomId, DateTime checkIn, DateTime checkOut, int numberOfGuests);
         Task<IEnumerable<Booking>> GetUpcomingBookingsAsync();
         Task<IEnumerable<Booking>> GetPastBookingsAsync();

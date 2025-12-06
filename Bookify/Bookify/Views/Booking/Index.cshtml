@@ -105,6 +105,71 @@
         justify-content: center;
     }
 
+    .btn-action {
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        border: 1px solid;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .btn-view {
+        background: var(--color-primary);
+        color: white;
+        border-color: var(--color-primary);
+    }
+
+    .btn-view:hover {
+        background: #16345a;
+        color: white;
+    }
+
+    .btn-details {
+        background: var(--color-accent);
+        color: white;
+        border-color: var(--color-accent);
+    }
+
+    .btn-details:hover {
+        background: #b89530;
+        color: white;
+    }
+
+    .btn-edit {
+        background: transparent;
+        color: #10B981;
+        border-color: #10B981;
+    }
+
+    .btn-edit:hover {
+        background: #10B981;
+        color: white;
+    }
+
+    .btn-delete {
+        background: transparent;
+        color: #DC2626;
+        border-color: #DC2626;
+    }
+
+    .btn-delete:hover {
+        background: #DC2626;
+        color: white;
+    }
+
+    .btn-action:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
     .empty-state {
         text-align: center;
         padding: var(--spacing-3xl);
@@ -268,22 +333,31 @@
 
                             <!-- Actions -->
                             <div class="booking-actions">
-                                <a asp-controller="Room" asp-action="Details" asp-route-id="@booking.RoomId" class="btn btn-outline btn-sm">
+                                <a asp-controller="Room" asp-action="Details" asp-route-id="@booking.RoomId" class="btn-action btn-view">
                                     <i class="fas fa-door-open"></i> View Room
                                 </a>
-                                <a asp-action="Details" asp-route-id="@booking.Id" class="btn btn-primary btn-sm">
+                                <a asp-action="Details" asp-route-id="@booking.Id" class="btn-action btn-details">
                                     <i class="fas fa-info-circle"></i> Details
                                 </a>
-                                @if (booking.PaymentStatus?.ToLower() != "cancelled" && booking.CheckIn > DateTime.Now)
+                                @if (booking.PaymentStatus?.ToLower() == "pending" && booking.CheckIn.Date >= DateTime.Today)
                                 {
+                                    <a asp-action="Edit" asp-route-id="@booking.Id" class="btn-action btn-edit">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
                                     <form asp-action="Cancel" asp-route-id="@booking.Id" method="post" 
-                                          onsubmit="return confirm('Are you sure you want to cancel this booking?');"
+                                          onsubmit="return confirm('Are you sure you want to cancel this booking? You can delete it completely from your history after cancellation.');"
                                           style="margin: 0;">
                                         @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-outline btn-sm btn-cancel" style="width: 100%;">
+                                        <button type="submit" class="btn-action btn-cancel">
                                             <i class="fas fa-times"></i> Cancel
                                         </button>
                                     </form>
+                                }
+                                @if (booking.PaymentStatus?.ToLower() == "cancelled")
+                                {
+                                    <a asp-action="Delete" asp-route-id="@booking.Id" class="btn-action btn-delete">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
                                 }
                             </div>
                         </div>
