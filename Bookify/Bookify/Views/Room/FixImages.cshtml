@@ -1,0 +1,158 @@
+@{
+    ViewData["Title"] = "Fix Room Images";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="text-primary mb-3">??? Room Images Fix Tool</h1>
+        <p class="text-gray">Fix placeholder images by populating the database with high-quality hotel room photos</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div id="status" class="mb-4">
+                        <h5>Current Status</h5>
+                        <p>Click the button below to check and fix room images</p>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button id="checkImagesBtn" class="btn btn-info btn-lg" onclick="checkRoomImages()">
+                            <i class="fas fa-search me-2"></i>Check Current Images
+                        </button>
+                        <button id="fixImagesBtn" class="btn btn-primary btn-lg" onclick="fixRoomImages()" disabled>
+                            <i class="fas fa-magic me-2"></i>Fix Room Images
+                        </button>
+                    </div>
+
+                    <div id="results" class="mt-4" style="display: none;">
+                        <h5>Results</h5>
+                        <div id="resultsContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function checkRoomImages() {
+    const btn = document.getElementById('checkImagesBtn');
+    const status = document.getElementById('status');
+    const results = document.getElementById('results');
+    const resultsContent = document.getElementById('resultsContent');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Checking...';
+    
+    try {
+        const response = await fetch('/Room/CheckRoomData');
+        const data = await response.json();
+        
+        if (data.success) {
+            status.innerHTML = `
+                <h5 class="text-success">? Check Complete</h5>
+                <p>Found ${data.data.length} rooms</p>
+            `;
+            
+            let imagesWithPlaceholder = data.data.filter(r => !r.hasImage || r.imageUrl.includes('default-room.jpg'));
+            
+            if (imagesWithPlaceholder.length > 0) {
+                resultsContent.innerHTML = `
+                    <div class="alert alert-warning">
+                        <h6>?? Issues Found</h6>
+                        <p>${imagesWithPlaceholder.length} rooms have placeholder or missing images</p>
+                        <ul class="mb-0">
+                            ${imagesWithPlaceholder.map(r => `<li>${r.name} (ID: ${r.id})</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                document.getElementById('fixImagesBtn').disabled = false;
+            } else {
+                resultsContent.innerHTML = `
+                    <div class="alert alert-success">
+                        <h6>? All Good!</h6>
+                        <p>All rooms have proper images</p>
+                    </div>
+                `;
+            }
+            
+            results.style.display = 'block';
+        } else {
+            status.innerHTML = `<h5 class="text-danger">? Error: ${data.error}</h5>`;
+        }
+    } catch (error) {
+        status.innerHTML = `<h5 class="text-danger">? Error: ${error.message}</h5>`;
+    }
+    
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-search me-2"></i>Check Current Images';
+}
+
+async function fixRoomImages() {
+    const btn = document.getElementById('fixImagesBtn');
+    const status = document.getElementById('status');
+    const resultsContent = document.getElementById('resultsContent');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Fixing Images...';
+    
+    try {
+        const response = await fetch('/Room/FixRoomImages');
+        const data = await response.json();
+        
+        if (data.success) {
+            status.innerHTML = `
+                <h5 class="text-success">? Fix Complete!</h5>
+                <p>Successfully updated ${data.imageCount} images for ${data.rooms.length} rooms</p>
+            `;
+            
+            resultsContent.innerHTML = `
+                <div class="alert alert-success">
+                    <h6>?? Success!</h6>
+                    <p><strong>Fixed:</strong> ${data.imageCount} images</p>
+                    <p><strong>Rooms Updated:</strong> ${data.rooms.length}</p>
+                    <hr>
+                    <small>You can now go to the rooms page to see the beautiful hotel images!</small>
+                </div>
+                <div class="mt-3">
+                    <a href="/Room" class="btn btn-success">
+                        <i class="fas fa-eye me-2"></i>View Rooms
+                    </a>
+                </div>
+            `;
+        } else {
+            status.innerHTML = `<h5 class="text-danger">? Error: ${data.error}</h5>`;
+        }
+    } catch (error) {
+        status.innerHTML = `<h5 class="text-danger">? Error: ${error.message}</h5>`;
+    }
+    
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-magic me-2"></i>Fix Room Images';
+}
+</script>
+
+<style>
+.card {
+    border: none;
+    border-radius: 15px;
+}
+
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+#results {
+    border-top: 2px solid #f1f3f4;
+    padding-top: 1.5rem;
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+</style>

@@ -1,41 +1,663 @@
 ﻿@model Bookify.Models.ViewModels.LoginViewModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Welcome to Bookify";
+    Layout = null;
 }
 
-<h2>Login</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login or create an account to manage your bookings with Bookify">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #1e3a5f;
+            --color-secondary: #2a5a8f;
+            --color-accent: #d4af37;
+            --color-success: #10b981;
+            --color-danger: #ef4444;
+            --color-gray-50: #f9fafb;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+            --color-gray-500: #6b7280;
+            --color-gray-700: #374151;
+            --color-gray-800: #1f2937;
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 
-<form asp-action="Login" method="post">
-    @Html.ValidationSummary(excludePropertyErrors: true, "", new { @class = "text-danger" })
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <div class="form-group mb-3">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            padding: 2rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="1000,100 1000,0 0,100"/></svg>');
+            background-size: cover;
+            pointer-events: none;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 480px;
+            padding: 3rem 2.5rem;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+
+        .brand-icon {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            color: white;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-right: 0.75rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .brand-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0;
+        }
+
+        .brand-tagline {
+            color: var(--color-gray-500);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .tab-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            background: var(--color-gray-100);
+            padding: 0.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .tab-button {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background: transparent;
+            color: var(--color-gray-500);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: var(--color-primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-1px);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+       
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--color-gray-700);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--color-gray-200);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-control:hover {
+            border-color: var(--color-gray-300);
+        }
+
+        .form-control::placeholder {
+            color: var(--color-gray-500);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-check-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check-input {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid var(--color-gray-300);
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .form-check-label {
+            color: var(--color-gray-700);
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: white;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(30, 58, 95, 0.3);
+        }
+
+        .btn-google {
+            background: white;
+            border: 2px solid var(--color-gray-200);
+            color: var(--color-gray-700);
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-google:hover {
+            border-color: var(--color-gray-300);
+            background: var(--color-gray-50);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            color: var(--color-gray-500);
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--color-gray-200);
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: none;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, var(--color-success) 0%, #059669 100%);
+            color: white;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .text-danger {
+            color: var(--color-danger);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .demo-credentials {
+            background: linear-gradient(135deg, var(--color-gray-50) 0%, #f1f5f9 100%);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 2px solid var(--color-gray-200);
+            margin-top: 1rem;
+        }
+
+        .demo-title {
+            color: var(--color-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .demo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .demo-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .demo-label {
+            color: var(--color-gray-600);
+            font-weight: 500;
+        }
+
+        .demo-value {
+            color: var(--color-gray-800);
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--color-gray-500);
+            font-size: 0.875rem;
+            margin-top: 2rem;
+            line-height: 1.5;
+        }
+
+        .footer-text a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive design for mobile devices */
+        
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="brand-header">
+                <a href="@Url.Action("Index", "Home")" class="brand-logo">
+                    <div class="brand-icon">B</div>
+                    <h1 class="brand-name">Bookify</h1>
+                </a>
+                <p class="brand-tagline">Your gateway to luxury accommodations</p>
+            </div>
+
+            <!-- Alerts -->
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @TempData["Error"]
+                </div>
+            }
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    @TempData["Success"]
+                </div>
+            }
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    @TempData["Message"]
+                </div>
+            }
+
+            @if (ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+            {
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+
+            <!-- Tab Navigation -->
+            <div class="tab-container">
+                <button class="tab-button active" onclick="switchTab('login')" id="loginTabBtn">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </button>
+                <button class="tab-button" onclick="switchTab('register')" id="registerTabBtn">
+                    <i class="fas fa-user-plus me-2"></i>Sign Up
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginSection" class="form-section active">
+                <form asp-action="Login" asp-controller="Account" method="post" id="loginForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter your email address" autocomplete="email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input asp-for="Password" class="form-control" placeholder="Enter your password" autocomplete="current-password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check-container">
+                        <input asp-for="RememberMe" type="checkbox" class="form-check-input" id="rememberMe" />
+                        <label class="form-check-label" for="rememberMe">Keep me signed in</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>Sign In to Your Account
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>Or continue with</span>
+                </div>
+
+                <a href="~/login-google" class="btn btn-google">
+                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" width="20" height="20" />
+                    Sign in with Google
+                </a>
+
+                <div class="demo-credentials">
+                    <div class="demo-title">
+                        <i class="fas fa-key"></i>
+                        Demo Account
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">Admin Email:</span>
+                        <span class="demo-value">admin@bookify.com</span>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">Password:</span>
+                        <span class="demo-value">Admin@123</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerSection" class="form-section">
+                <form asp-action="Register" asp-controller="Account" method="post" id="registerForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" name="FirstName" class="form-control" placeholder="John" required autocomplete="given-name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="LastName" class="form-control" placeholder="Doe" required autocomplete="family-name" />
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="FullName" id="fullNameHidden" />
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="Email" class="form-control" placeholder="john.doe@example.com" required autocomplete="email" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="Password" class="form-control" placeholder="Create a strong password" minlength="6" required autocomplete="new-password" />
+                        <div class="password-requirements">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Password must be at least 6 characters long
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="ConfirmPassword" class="form-control" placeholder="Confirm your password" required autocomplete="new-password" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>Create Your Account
+                    </button>
+                </form>
+            </div>
+
+            <div class="footer-text">
+                By continuing, you agree to our 
+                <a href="#" onclick="alert('Terms of Service - Demo application')">Terms of Service</a> and 
+                <a href="#" onclick="alert('Privacy Policy - Demo application')">Privacy Policy</a>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function switchTab(tab) {
+            // Update button states
+            const loginBtn = document.getElementById('loginTabBtn');
+            const registerBtn = document.getElementById('registerTabBtn');
+            
+            loginBtn.classList.remove('active');
+            registerBtn.classList.remove('active');
+            
+            if (tab === 'login') {
+                loginBtn.classList.add('active');
+            } else {
+                registerBtn.classList.add('active');
+            }
 
-    <div class="form-check mb-3">
-        <input asp-for="RememberMe" class="form-check-input" />
-        <label asp-for="RememberMe" class="form-check-label"></label>
-    </div>
+            // Update form sections
+            const loginSection = document.getElementById('loginSection');
+            const registerSection = document.getElementById('registerSection');
+            
+            loginSection.classList.remove('active');
+            registerSection.classList.remove('active');
+            
+            if (tab === 'login') {
+                loginSection.classList.add('active');
+            } else {
+                registerSection.classList.add('active');
+            }
+        }
 
-    <button type="submit" class="btn btn-primary w-100">Login</button>
-</form>
+        // Auto-update full name for registration
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstNameInput = document.querySelector('input[name="FirstName"]');
+            const lastNameInput = document.querySelector('input[name="LastName"]');
+            const fullNameHidden = document.getElementById('fullNameHidden');
 
-<div class="text-center mb-3">
-    <p>Or</p>
+            function updateFullName() {
+                if (firstNameInput && lastNameInput && fullNameHidden) {
+                    const fullName = (firstNameInput.value.trim() + ' ' + lastNameInput.value.trim()).trim();
+                    fullNameHidden.value = fullName;
+                }
+            }
 
-    <a href="~/login-google" class="btn btn-outline-danger w-100" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" width="20" height="20" />
-        Sign in with Google
-    </a>
-</div>
-<div class="text-center mt-3">
-    <p>Don’t have an account? <a asp-action="Register">Register</a></p>
-</div>
+            if (firstNameInput) firstNameInput.addEventListener('input', updateFullName);
+            if (lastNameInput) lastNameInput.addEventListener('input', updateFullName);
+
+            // Auto-dismiss alerts after 5 seconds
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    if (alert.classList.contains('alert-success') || alert.classList.contains('alert-info')) {
+                        alert.style.opacity = '0';
+                        alert.style.transform = 'translateY(-20px)';
+                        setTimeout(() => alert.remove(), 300);
+                    }
+                });
+            }, 5000);
+
+            // Auto-fill demo credentials when clicking on them
+            document.querySelectorAll('.demo-item').forEach(item => {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', function() {
+                    const isEmail = this.textContent.includes('admin@bookify.com');
+                    const isPassword = this.textContent.includes('Admin@123');
+                    
+                    if (isEmail) {
+                        const emailInput = document.querySelector('input[name="Email"]');
+                        if (emailInput) {
+                            emailInput.value = 'admin@bookify.com';
+                            emailInput.focus();
+                        }
+                    } else if (isPassword) {
+                        const passwordInput = document.querySelector('input[name="Password"]');
+                        if (passwordInput) {
+                            passwordInput.value = 'Admin@123';
+                            passwordInput.focus();
+                        }
+                    }
+                });
+            });
+
+            // Password confirmation validation for registration
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    const password = this.querySelector('input[name="Password"]').value;
+                    const confirmPassword = this.querySelector('input[name="ConfirmPassword"]').value;
+                    
+                    if (password !== confirmPassword) {
+                        e.preventDefault();
+                        
+                        // Remove any existing error alerts
+                        const existingAlert = document.querySelector('.password-mismatch-alert');
+                        if (existingAlert) existingAlert.remove();
+                        
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-danger password-mismatch-alert';
+                        alertDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i>Passwords do not match. Please try again.';
+                        
+                        registerForm.parentNode.insertBefore(alertDiv, registerForm);
+                        
+                        // Scroll to alert
+                        alertDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        
+                        return false;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -172,8 +172,8 @@ namespace Bookify.services
             return new RoomDetailsViewModel
             {
                 Id = room.Id,
-                Name = room.Name ?? "",
-                Description = room.Description ?? "",
+                Name = room.Name ?? $"Room {room.RoomNumber}",
+                Description = room.Description ?? "Comfortable and well-appointed room with modern amenities.",
                 NumberOfGusts = room.MaxGuests,
                 Area = (int)room.Area,
                 IsFavorite = userId != null && await _favoriteService.IsFavoriteAsync(userId, room.Id),
@@ -183,7 +183,7 @@ namespace Bookify.services
                 Rating = CalculateRating(room.Reviews),
                 NumberOfReviews = room.Reviews?.Count ?? 0,
                 Amenities = await _amenityService.GetAmenitiesForRoomAsync(room.Id) ?? new List<Amenity>(),
-                RoomImages = room.RoomImages ?? new List<RoomImage>()
+                RoomImages = GetRoomImagesWithFallback(room.RoomImages, room.Id)
             };
         }
 
@@ -197,10 +197,10 @@ namespace Bookify.services
                 .Select(r => new TopRoomViewModel
                 {
                     Id = r.Id,
-                    Name = r.Name,
+                    Name = r.Name ?? $"Room {r.RoomNumber}",
                     PricePerNight = (int)r.PriceForNight,
                     Rating = CalculateRating(r.Reviews),
-                    FirstImageUrl = r.RoomImages != null && r.RoomImages.Any() ? r.RoomImages.First().ImageUrl : ""
+                    FirstImageUrl = GetFirstImageUrlWithFallback(r.RoomImages, r.Id)
                 })
                 .ToList();
         }
@@ -239,6 +239,22 @@ namespace Bookify.services
         {
             return await _roomRepository.GetAllIncludingAsync(r => r.RoomType, r => r.RoomImages);
         }
+
+        // Debug method to check room images
+        public async Task<object> GetRoomImagesDebugInfoAsync()
+        {
+            var rooms = await _roomRepository.GetAllWithReviewsAsync();
+            return rooms.Select(r => new 
+            {
+                RoomId = r.Id,
+                RoomNumber = r.RoomNumber,
+                RoomName = r.Name,
+                ImageCount = r.RoomImages?.Count ?? 0,
+                Images = r.RoomImages?.Select(img => img.ImageUrl).ToList() ?? new List<string>(),
+                FirstImageUrl = r.RoomImages?.FirstOrDefault()?.ImageUrl ?? "No images"
+            }).ToList();
+        }
+
         // Some helper Methods
         private decimal CalculateFinalPrice(decimal price, bool hasDiscount, int? discountPercent)
         {
@@ -268,13 +284,41 @@ namespace Bookify.services
             {
                 var amenities = await _amenityService.GetAmenitiesForRoomAsync(room.Id);
 
+                // Better image URL handling with multiple fallbacks
+                string imageUrl = "";
+                if (room.RoomImages != null && room.RoomImages.Any())
+                {
+                    // Use the first available image
+                    imageUrl = room.RoomImages.First().ImageUrl;
+                }
+                
+                // If no image or still a placeholder, assign a high-quality fallback based on room type/number
+                if (string.IsNullOrEmpty(imageUrl) || imageUrl.Contains("default-room.jpg"))
+                {
+                    var fallbackImages = new[]
+                    {
+                        "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80", // Luxury bedroom
+                        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80", // Modern luxury room
+                        "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=800&q=80", // Hotel suite
+                        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80", // Executive room
+                        "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80", // Business hotel room
+                        "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80", // Family room
+                        "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?w=800&q=80", // Budget room
+                        "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=800&q=80"  // Ocean view suite
+                    };
+                    
+                    // Use room ID to get consistent image selection
+                    var imageIndex = room.Id % fallbackImages.Length;
+                    imageUrl = fallbackImages[imageIndex];
+                }
+
                 cardList.Add(new RoomCardViewModel
                 {
                     Id = room.Id,
-                    Name = room.Name,
+                    Name = room.Name ?? $"Room {room.RoomNumber}",
                     Rating = CalculateRating(room.Reviews),
                     NumberOfReviews = room.Reviews?.Count() ?? 0,
-                    Description = room.Description,
+                    Description = room.Description ?? "Comfortable and well-appointed room",
                     NumberOfGusts = room.MaxGuests,
                     Area = (int)room.Area,
                     DiscountPercentage = room.HasDiscount ? room.DiscountPercent : null,
@@ -282,7 +326,7 @@ namespace Bookify.services
                     FinalPrice = CalculateFinalPrice(room.PriceForNight, room.HasDiscount, room.DiscountPercent),
                     Amenities = amenities,
                     IsFavorite = userId != null && userFavoriteRoomIds.Contains(room.Id),
-                    ImageUrl = room.RoomImages != null && room.RoomImages.Any() ? room.RoomImages.First().ImageUrl : "/images/rooms/default-room.jpg"
+                    ImageUrl = imageUrl
                 });
             }
             return cardList;
@@ -313,6 +357,64 @@ namespace Bookify.services
                 }
             }
             return roomImages;
+        }
+
+        // Helper method to get room images with fallback
+        private IEnumerable<RoomImage> GetRoomImagesWithFallback(ICollection<RoomImage>? roomImages, int roomId)
+        {
+            if (roomImages != null && roomImages.Any())
+            {
+                // Check if any images are placeholders and replace them
+                var validImages = roomImages.Where(img => !string.IsNullOrEmpty(img.ImageUrl) && 
+                                                         !img.ImageUrl.Contains("default-room.jpg")).ToList();
+                
+                if (validImages.Any())
+                {
+                    return validImages;
+                }
+            }
+
+            // Return fallback images
+            var fallbackImages = GetFallbackImagesForRoom(roomId);
+            return fallbackImages.Select(url => new RoomImage { ImageUrl = url }).ToList();
+        }
+
+        // Helper method to get first image URL with fallback
+        private string GetFirstImageUrlWithFallback(ICollection<RoomImage>? roomImages, int roomId)
+        {
+            if (roomImages != null && roomImages.Any())
+            {
+                var firstValidImage = roomImages.FirstOrDefault(img => !string.IsNullOrEmpty(img.ImageUrl) && 
+                                                                      !img.ImageUrl.Contains("default-room.jpg"));
+                if (firstValidImage != null)
+                {
+                    return firstValidImage.ImageUrl;
+                }
+            }
+
+            // Return fallback image
+            var fallbackImages = GetFallbackImagesForRoom(roomId);
+            return fallbackImages.First();
+        }
+
+        // Helper method to get fallback images for a specific room
+        private List<string> GetFallbackImagesForRoom(int roomId)
+        {
+            var fallbackImages = new[]
+            {
+                "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80", // Luxury bedroom
+                "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80", // Modern luxury room
+                "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=800&q=80", // Hotel suite
+                "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80", // Executive room
+                "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80", // Business hotel room
+                "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80", // Family room
+                "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?w=800&q=80", // Budget room
+                "https://images.unsplash.com/photo-1591088398332-8a7791972843?w=800&q=80"  // Ocean view suite
+            };
+            
+            // Use room ID to get consistent image selection
+            var imageIndex = roomId % fallbackImages.Length;
+            return new List<string> { fallbackImages[imageIndex] };
         }
     }
 }

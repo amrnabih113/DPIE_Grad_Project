@@ -1,4 +1,3 @@
-
 using Bookify.Repository;
 using Bookify.services;
 using Bookify.services.IServices;
@@ -25,19 +24,42 @@ namespace Bookify
                     });
             });
 
-
-
+            // Configure Identity with more relaxed settings for demo
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                options.Password.RequiredLength = 8;
-                options.Password.RequireUppercase = true;
+                // Password settings (relaxed for demo)
+                options.Password.RequiredLength = 6;
+                options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
-                options.Password.RequireDigit = true;
+                options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
-                options.SignIn.RequireConfirmedAccount = true;
+                
+                // Sign-in settings (disable email confirmation requirement for demo)
+                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedEmail = false;
+                
+                // User settings
+                options.User.RequireUniqueEmail = true;
+                
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+            // Configure application cookies
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromDays(7); // Remember me for 7 days
+                options.SlidingExpiration = true;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            });
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
@@ -47,20 +69,27 @@ namespace Bookify
             builder.Services.AddScoped<IAmenityService, AmenityService>();
 
             builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
-            options.TokenLifespan = TimeSpan.FromHours(3));
+                options.TokenLifespan = TimeSpan.FromHours(3));
 
-
+            // Configure external authentication
             builder.Services.AddAuthentication()
                 .AddGoogle(googleOptions =>
                 {
                     googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
                     googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
                     googleOptions.CallbackPath = "/signin-google";
+                    
+                    // Map additional claims
+                    googleOptions.Scope.Add("profile");
+                    googleOptions.Scope.Add("email");
+                    
+                    // Save tokens for later use if needed
+                    googleOptions.SaveTokens = true;
                 });
+
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IRoomRepository, RoomRepository>();
             builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
-
 
             builder.Services.AddScoped<IRoomSerivce, RoomService>();
             builder.Services.AddScoped<IAmenityService, AmenityService>();
@@ -71,12 +100,38 @@ namespace Bookify
 
             var app = builder.Build();
 
+            // Ensure database is created and migrated before seeding
             using (var scope = app.Services.CreateScope())
             {
-                await IdentitySeeder.SeedRolesAsync(scope.ServiceProvider);
-                await IdentitySeeder.SeedAdminAccount(scope.ServiceProvider);
-            }
+                try
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    
+                    // Ensure database is created
+                    await context.Database.EnsureCreatedAsync();
+                    
+                    // Apply any pending migrations
+                    await context.Database.MigrateAsync();
+                    
+                    // Seed identity data
+                    await IdentitySeeder.SeedRolesAsync(scope.ServiceProvider);
+                    await IdentitySeeder.SeedAdminAccount(scope.ServiceProvider);
 
+                    // Seed all application data
+                    await IdentitySeeder.SeedAllDataAsync(scope.ServiceProvider);
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while creating/migrating the database or seeding data.");
+                    
+                    // Log more specific details about the error
+                    if (ex is Microsoft.EntityFrameworkCore.Storage.RetryLimitExceededException retryEx)
+                    {
+                        logger.LogError("Database retry limit exceeded. Check your database connection string and ensure SQL Server is running. Inner exception: {InnerException}", retryEx.InnerException?.Message);
+                    }
+                }
+            }
 
             if (!app.Environment.IsDevelopment())
             {
@@ -85,7 +140,8 @@ namespace Bookify
             }
 
             app.UseHttpsRedirection();
-            //cashing
+            
+            // Static files with caching
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
@@ -95,12 +151,13 @@ namespace Bookify
                         "public,max-age=" + durationInSeconds;
                 }
             });
+
             app.UseRouting();
 
+            // Authentication must come before Authorization
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseStaticFiles();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -1,0 +1,225 @@
+@model IEnumerable<Booking>
+@{
+    ViewData["Title"] = "My Bookings - Bookify";
+}
+
+<main class="py-8">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-6">
+            <div>
+                <h1 class="text-primary mb-2">My Bookings</h1>
+                <p class="text-gray">Manage your hotel reservations</p>
+            </div>
+            <a asp-controller="Room" asp-action="Index" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Book New Room
+            </a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show">
+                <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (Model.Any())
+        {
+            <div class="row g-4">
+                @foreach (var booking in Model)
+                {
+                    <div class="col-lg-6">
+                        <div class="card booking-card h-100 shadow-sm">
+                            <div class="row g-0 h-100">
+                                <div class="col-md-4">
+                                    @if (booking.Room?.RoomImages != null && booking.Room.RoomImages.Any())
+                                    {
+                                        <img src="@booking.Room.RoomImages.First().ImageUrl" 
+                                             alt="@booking.Room.Name" 
+                                             class="img-fluid h-100 w-100" 
+                                             style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                                    }
+                                    else
+                                    {
+                                        <div class="h-100 w-100 d-flex align-items-center justify-content-center bg-light" 
+                                             style="border-radius: 0.375rem 0 0 0.375rem;">
+                                            <i class="fas fa-image text-muted" style="font-size: 2rem;"></i>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body d-flex flex-column h-100 p-4">
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h5 class="text-primary mb-0">@(booking.Room?.Name ?? "Room")</h5>
+                                                <span class="badge @GetStatusBadgeClass(booking.PaymentStatus)">
+                                                    @(booking.PaymentStatus ?? "Pending")
+                                                </span>
+                                            </div>
+                                            
+                                            <p class="text-muted small mb-3">
+                                                Booking #@booking.Id • @booking.CreatedAt.ToString("MMM dd, yyyy")
+                                            </p>
+
+                                            <div class="booking-details mb-3">
+                                                <div class="row g-2 small">
+                                                    <div class="col-6">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-calendar-alt text-primary me-2"></i>
+                                                            <div>
+                                                                <div class="fw-medium">Check-in</div>
+                                                                <div class="text-muted">@booking.CheckIn.ToString("MMM dd, yyyy")</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-calendar-alt text-primary me-2"></i>
+                                                            <div>
+                                                                <div class="fw-medium">Check-out</div>
+                                                                <div class="text-muted">@booking.CheckOut.ToString("MMM dd, yyyy")</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-users text-primary me-2"></i>
+                                                            <div>
+                                                                <div class="fw-medium">Guests</div>
+                                                                <div class="text-muted">@booking.NumberOfGuests</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-moon text-primary me-2"></i>
+                                                            <div>
+                                                                <div class="fw-medium">Nights</div>
+                                                                <div class="text-muted">@((booking.CheckOut - booking.CheckIn).Days)</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div class="fw-bold text-primary" style="font-size: 1.25rem;">
+                                                        $@booking.TotalPrice.ToString("F2")
+                                                    </div>
+                                                    <div class="text-muted small">Total amount</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-3 pt-3 border-top d-flex gap-2">
+                                            <a asp-action="Details" asp-route-id="@booking.Id" 
+                                               class="btn btn-outline-primary btn-sm flex-fill">
+                                                <i class="fas fa-eye me-1"></i>View Details
+                                            </a>
+                                            
+                                            @if (booking.PaymentStatus != "Cancelled" && booking.CheckIn > DateTime.Now.AddDays(1))
+                                            {
+                                                <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                        onclick="confirmCancellation(@booking.Id)">
+                                                    <i class="fas fa-times me-1"></i>Cancel
+                                                </button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="empty-state">
+                    <i class="fas fa-bed text-muted mb-3" style="font-size: 4rem;"></i>
+                    <h3 class="text-gray-600">No bookings yet</h3>
+                    <p class="text-gray mb-4">You haven't made any hotel reservations. Start exploring our rooms!</p>
+                    <a asp-controller="Room" asp-action="Index" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search me-2"></i>Browse Rooms
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        function confirmCancellation(bookingId) {
+            if (confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
+                // Create a form to submit the cancellation
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("Cancel", "Booking")';
+                
+                const idInput = document.createElement('input');
+                idInput.type = 'hidden';
+                idInput.name = 'id';
+                idInput.value = bookingId;
+                form.appendChild(idInput);
+                
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = '@Html.AntiForgeryToken()';
+                form.appendChild(tokenInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .booking-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            overflow: hidden;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+
+        .empty-state {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .booking-details .row > div {
+            margin-bottom: 0.75rem;
+        }
+    </style>
+}
+
+@functions {
+    private string GetStatusBadgeClass(string? status)
+    {
+        return status?.ToLower() switch
+        {
+            "confirmed" => "bg-success",
+            "pending" => "bg-warning text-dark",
+            "cancelled" => "bg-danger",
+            "completed" => "bg-info text-dark",
+            _ => "bg-secondary"
+        };
+    }
+}

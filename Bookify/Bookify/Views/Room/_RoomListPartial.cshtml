@@ -3,10 +3,10 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <p class="text-gray mb-0" id="resultsCount">@Model.Rooms.Count() room(s) found</p>
     <select id="sortBy" name="order" class="form-select" style="width: auto; max-width: 200px;" onchange="applyFilters(1)">
-        <!option value="popular" @(Model.SelectedOrder == "popular" ? "selected" : "")>Most Popular</!option>
-        <!option value="price_asc" @(Model.SelectedOrder == "price_asc" ? "selected" : "")>Price: Low to High</!option>
-        <!option value="price_desc" @(Model.SelectedOrder == "price_desc" ? "selected" : "")>Price: High to Low</!option>
-        <!option value="rating_desc" @(Model.SelectedOrder == "rating_desc" ? "selected" : "")>Highest Rated</!option>
+        <option value="popular">Most Popular</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="rating_desc">Highest Rated</option>
     </select>
 </div>
 
@@ -28,11 +28,13 @@
         {
             <div class="room-card fade-in position-relative">
                 <div class="room-image-wrapper position-relative" style="position:relative;">
-                    <img src="@room.ImageUrl" alt="@room.Name" class="room-card-image w-100" onerror="this.src='https://via.placeholder.com/600x400/1E3A5F/D4AF37?text=@Uri.EscapeDataString(room.Name)'">
+                    <img src="@room.ImageUrl" alt="@(room.Name ?? "Room")" class="room-card-image w-100" 
+                         onerror="this.src='https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80'"
+                         loading="lazy" style="width: 100%; height: 250px; object-fit: cover; display: block;">
 
                     <button class="btn btn-light rounded-circle favorite-btn shadow-sm position-absolute top-0 end-0 m-3"
                         data-room-id="@room.Id"
-                            style="background-color: #ffffffbd; border-radius: 50%; position:absolute;top:5px;right:5px; width: 45px; height: 45px; padding: 0; display: flex; align-items: center; justify-content: center; z-index: 10;">
+                        style="background-color: #ffffffbd; border-radius: 50%; position:absolute;top:5px;right:5px; width: 45px; height: 45px; padding: 0; display: flex; align-items: center; justify-content: center; z-index: 10;">
                         <i class="@(room.IsFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"
                            style="font-size: 1.5rem; @(room.IsFavorite ? "color: #ff0000;" : "")">
                         </i>
@@ -42,7 +44,7 @@
                 <div class="room-card-content">
                     <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--spacing-sm);">
                         <div>
-                            <h3 class="text-primary">@room.Name</h3>
+                            <h3 class="text-primary">@(room.Name ?? "Room " + room.Id)</h3>
                         </div>
                         @if (room.DiscountPercentage.HasValue && room.DiscountPercentage > 0)
                         {
@@ -61,18 +63,24 @@
                         @room.NumberOfReviews reviews
                     </p>
 
-                    <p class="text-gray mt-3">
-                        @(room.Description.Length > 70 ? room.Description.Substring(0, 70) + "..." : room.Description)
-                    </p>
+                    @if (!string.IsNullOrEmpty(room.Description))
+                    {
+                        <p class="text-gray mt-3">
+                            @(room.Description.Length > 70 ? room.Description.Substring(0, 70) + "..." : room.Description)
+                        </p>
+                    }
 
                     <div class="amenities-list">
-                        @foreach (var amenity in room.Amenities.Take(5))
+                        @if (room.Amenities != null && room.Amenities.Any())
                         {
-                            <span class="amenity-tag">@amenity.Name</span>
-                        }
-                        @if (room.Amenities.Count() > 5)
-                        {
-                            <span class="amenity-tag">+@(room.Amenities.Count() - 5) more</span>
+                            @foreach (var amenity in room.Amenities.Take(5))
+                            {
+                                <span class="amenity-tag">@amenity.Name</span>
+                            }
+                            @if (room.Amenities.Count() > 5)
+                            {
+                                <span class="amenity-tag">+@(room.Amenities.Count() - 5) more</span>
+                            }
                         }
                     </div>
 
@@ -80,7 +88,7 @@
                         <div>
                             <div style="display: flex; align-items: baseline; gap: var(--spacing-xs);">
                                 <span style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--color-primary);">$@room.FinalPrice</span>
-                                @if (room.DiscountPercentage.HasValue)
+                                @if (room.DiscountPercentage.HasValue && room.DiscountPercentage > 0)
                                 {
                                     <span class="text-gray" style="text-decoration: line-through; font-size: var(--font-size-sm);">$@room.PricePerNight</span>
                                 }
@@ -93,8 +101,6 @@
                         <a asp-controller="Room" asp-action="Details" asp-route-id="@room.Id" class="btn btn-primary">View Details</a>
                     </div>
                 </div>
-
-                
             </div>
         }
         @if (Model.TotalPages > 1)
@@ -118,4 +124,14 @@
         }
     }
 </div>
+
+<script>
+    // Set selected option based on Model.SelectedOrder
+    document.addEventListener('DOMContentLoaded', function() {
+        var sortSelect = document.getElementById('sortBy');
+        if (sortSelect && '@Model.SelectedOrder') {
+            sortSelect.value = '@Model.SelectedOrder';
+        }
+    });
+</script>
 
